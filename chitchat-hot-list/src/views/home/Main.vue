@@ -10,13 +10,25 @@
                     <h2 class="sr-only">产品</h2>
             
                     <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-x-8">
-                        <div v-for="product in products" :key="product.id" :href="product.href" class="group">
-                            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                              <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full w-full object-cover object-center group-hover:opacity-75" />
-                            </div>
-                            <h3 class="mt-4 text-sm text-gray-700">{{ product.name }}</h3>
-                            <p class="mt-1 text-lg font-medium text-gray-900">{{ product.price }}</p>
-                        </div>
+                       
+                            <div v-for="product in products" class="group bg-gray-200 " >
+                                <div  class="aspect-h-1 aspect-w-1 w-full  overflow-hidden rounded-lg  xl:aspect-h-8 xl:aspect-w-7">
+                                 
+                                  <el-scrollbar height="400px" class="py-2">
+                                      <div v-for="product in products" :key="product.id" :href="product.href"  class="h-full w-full px-5 py-1 cursor-pointer " > 
+                                         <a class="mt-4 text-sm font-medium tracking-wide text-blue-700 hover:text-blue-400 ">{{product.id}}.{{ product.name }}</a>
+                                      </div>
+                                    </el-scrollbar>
+                                  <!-- <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full w-full object-cover object-center group-hover:opacity-75" /> -->
+                                </div>
+                                <!-- <h3 class="mt-4 text-sm text-gray-700">{{ product.name }}</h3> -->
+                                <!-- <p class="mt-1 text-lg font-medium text-gray-900">{{ product.price }}</p> -->
+                            
+                           
+                              </div>
+                      
+                            
+                         
                     </div>
                 </div>
             </div>  
@@ -45,10 +57,11 @@
 
   
   <script setup>
+ 
   const products = [
     {
       id: 1,
-      name: 'Earthen Bottle',
+      name: 'Earthen Bottle 数据在各领域都有着十分重要的作用。',
       href: '#',
       price: '$48',
       imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg',
@@ -56,7 +69,7 @@
     },
     {
       id: 2,
-      name: 'Nomad Tumbler',
+      name: 'Nomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据需要灵活选择',
       href: '#',
       price: '$35',
       imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
@@ -72,7 +85,7 @@
     },
     {
       id: 4,
-      name: 'Machined Mechanical Pencil',
+      name: 'Machined Mechanical PenciNomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据需要灵活选择Nomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据Nomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据l',
       href: '#',
       price: '$35',
       imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg',
@@ -96,12 +109,29 @@
     },
      {
       id: 4,
-      name: 'Machined Mechanical Pencil',
+      name: 'Machined Mechanical PenciNomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据Nomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据l',
       href: '#',
       price: '$35',
       imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg',
       imageAlt: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
     },
+    {
+      id: 2,
+      name: 'Nomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据需要灵活选择',
+      href: '#',
+      price: '$35',
+      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
+      imageAlt: 'Olive drab green insulated bottle with flared screw lid and flat top.',
+    },
+    {
+      id: 2,
+      name: 'Nomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据需要灵活选择Nomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据Nomad Tumbler数据在各领域都有着十分重要的作用。数据获取的方法有很多，可以根据aaaaa',
+      href: '#',
+      price: '$35',
+      imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
+      imageAlt: 'Olive drab green insulated bottle with flared screw lid and flat top.',
+    },
+    
     // More products...
   ]
   </script>

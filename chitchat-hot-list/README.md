@@ -74,3 +74,12 @@ npm install @headlessui/vue@latest
 ```
 npm install @heroicons/vue
 ```
+
+### Element (按需引入)
+官网：https://element-plus.gitee.io/zh-CN/guide/quickstart.html#%E6%8C%89%E9%9C%80%E5%AF%BC%E5%85%A5
+参考博文：https://blog.csdn.net/liuxin00020/article/details/129672140
+参考博文：https://zhuanlan.zhihu.com/p/460285798
+```
+npm install element-plus --save
+npm install -D unplugin-vue-components unplugin-auto-import
+```
