@@ -16,8 +16,12 @@ go get -u gopkg.in/ini.v1
 go get -u github.com/jinzhu/gorm
 ```
 
-## PostgreSQL
+## PostgreSQL 驱动
 ```
 go get github.com/lib/pq
 ```
 
+## MySQL 驱动
+```
+go get -u github.com/jinzhu/gorm/dialects/mysql
+```

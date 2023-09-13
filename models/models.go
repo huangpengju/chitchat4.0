@@ -8,6 +8,7 @@ import (
 
 	"chitchat4.0/pkg/setting"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/lib/pq"
 )
 
@@ -15,11 +16,18 @@ var Db *gorm.DB
 
 func Init() {
 	var err error
-	str := []string{"host=", setting.DbHost, " port=", setting.DbPort, " user=", setting.DbUser, " password=", setting.DbPassword, " dbname=", setting.DbName, " sslmode=disable"}
-	DSN := strings.Join(str, "")
+	var str []string
+	var DSN string
+	if setting.DbType == "mysql" {
+		str = []string{setting.DbUser, ":", setting.DbPassword, "@tcp(", setting.DbHost, ":", setting.DbPort, ")/", setting.DbName, "?charset=utf8mb4&parseTime=True&loc=Local"}
+		DSN = strings.Join(str, "")
+	} else if setting.DbType == "postgres" {
+		str = []string{"host=", setting.DbHost, " port=", setting.DbPort, " user=", setting.DbUser, " password=", setting.DbPassword, " dbname=", setting.DbName, " sslmode=disable"}
+		DSN = strings.Join(str, "")
+	}
 	Db, err = gorm.Open(setting.DbType, DSN)
 	if err != nil {
-		log.Fatalf("初始化数据库连接失败:%v\n", err)
+		log.Fatalf("Open初始化数据库连接失败:%v\n", err)
 		os.Exit(1)
 	}
 	fmt.Println("数据库连接成功")

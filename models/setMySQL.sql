@@ -1,3 +1,4 @@
+-- mysql
 CREATE DATABASE IF NOT EXISTS chitchat DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 DROP TABLE cc_tag
@@ -24,3 +25,21 @@ CREATE TABLE `cc_hot_list`(
     KEY `FK_tag` (`tag_id`), 
     CONSTRAINT `FK_tag` FOREIGN KEY (`tag_id`) REFERENCES `cc_tag` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='热搜清单表';
+
+
+type Tag struct {
+	gorm.Model
+	Name      string `gorm:"type:varchar(50);not null;unique;comment:'热搜标签id'"`
+	Sort      int    `gorm:"type:tinyint(3);comment:'热搜标签排序'"`
+	SourceKey string `gorm:"type:varchar(50);not null;unique;comment:'热搜标签类型'"`
+	IconColor string `gorm:"type:varchar(50);comment:'热搜标签图标颜色'"`
+}
+
+type HotList struct {
+	gorm.Model
+	Tag   Tag
+	TagId uint   `gorm:"not null;comment:'热搜标签id'"`
+	Title string `gorm:"type:varchar(200);not null;comment:'热搜标题'"`
+	Link  string `gorm:"type:varchar(300);not null;comment:'热搜地址'"`
+	Extra string `gorm:"type:varchar(50);comment:'额外信息'"`
+}
