@@ -31,6 +31,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 }
 
 func (s *Server) Run() error {
+
 	var err error
 	return err
 }

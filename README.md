@@ -29,6 +29,17 @@ go get -u github.com/sirupsen/logrus
 go get gopkg.in/yaml.v3
 ```
 
+### 安装 golang-lru
+```
+go get github.com/hashicorp/golang-lru
+```
+
+### 安装
+```
+
+```
+
+
 ### ini
 ```
 go get -u gopkg.in/ini.v1

@@ -19,7 +19,7 @@ type ServerConfig struct {
 	Address                string                  `yaml:"address"`                // 主机地址
 	Port                   int                     `yaml:"port"`                   // 端口
 	GracefulShutdownPeriod int                     `yaml:"gracefulShutdownPeriod"` // 正常停机时间
-	LimitConfig            []ratelimit.LimitConfig `yaml:"rateLimis"`              // 等级界限
+	LimitConfig            []ratelimit.LimitConfig `yaml:"rateLimis"`              // 速率限制
 	JWTSecret              string                  `yaml:"jwtSecret"`              // jsonWebToken
 }
 
