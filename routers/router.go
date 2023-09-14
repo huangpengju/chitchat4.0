@@ -3,8 +3,11 @@ package routers
 import (
 	"net/http"
 
+	docs "chitchat4.0/docs"
 	"chitchat4.0/pkg/setting"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"     // swagger embed files
+	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 )
 
 func InitRouter() *gin.Engine {
@@ -19,10 +22,26 @@ func InitRouter() *gin.Engine {
 	// Recovery 中间件会 revover 恢复 任何 panic
 	r.Use(gin.Recovery())
 
-	r.GET("/admin", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"message": "成功了",
-		})
-	})
+	// Swagger API 文档的路由
+
+	docs.SwaggerInfo.BasePath = "/"
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	r.GET("/admin", Helloworld)
 	return r
+}
+
+// @BasePath /admin
+
+// PingExample godoc
+// @Summary ping example
+// @Schemes
+// @Description do ping
+// @Tags example
+// @Accept json
+// @Produce json
+// @Success 200 {string} Helloworld
+// @Router /admin [get]
+func Helloworld(g *gin.Context) {
+	g.JSON(http.StatusOK, "helloworld")
 }
