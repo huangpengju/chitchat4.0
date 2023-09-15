@@ -107,12 +107,12 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 		controllers = append(controllers, kubeController)
 	}
 
-	gin.SetMode(conf.Server.ENV)
+	gin.SetMode(conf.Server.ENV) // 设置应用程序运行模
 
-	e := gin.New()
+	e := gin.New() // 返回一个 gin.Engine 类型的实例,可以根据需要在这个引擎实例上添加中间件、路由和处理程序等
 	e.Use(
-		gin.Recovery(),
-		rateLimitMiddleware,
+		gin.Recovery(),      // 添加错误恢复中间件
+		rateLimitMiddleware, // 添加限速中间件
 		middleware.MonitorMiddleware(),
 		middleware.CORSMiddleware(),
 		middleware.RequestInfoMiddleware(&request.RequestInfoFactory{APIPrefixes: set.NewString("api")}),
