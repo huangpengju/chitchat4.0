@@ -20,7 +20,7 @@ import (
 // 声明全局变量，定义命令行 flag 参数
 var (
 	printVersion = flag.Bool("v", false, "打印版本")
-	appConfig    = flag.String("config", "/config/app.yaml", "应用的配置路径")
+	appConfig    = flag.String("config", "config/app.yaml", "应用的配置路径")
 )
 
 // @title           ChitChat API

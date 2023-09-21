@@ -1,7 +1,10 @@
 package server
 
 import (
+	"os"
+
 	"chitchat4.0/pkg/config"
+	"chitchat4.0/pkg/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -14,6 +17,10 @@ type Server struct {
 }
 
 func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
+	// 1. 准备限速的中间件
+	middleware.RateLimitMiddleware(conf.Server.LimitConfig)
+	// fmt.Println("logger=", logger)
+	os.Exit(0)
 
 	gin.SetMode(conf.Server.ENV) // 设置应用的模式(debug|release)
 
