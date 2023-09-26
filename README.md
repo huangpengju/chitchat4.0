@@ -34,9 +34,24 @@ go get gopkg.in/yaml.v3
 go get github.com/hashicorp/golang-lru
 ```
 
-### 安装
+### 安装 gorm
+```
+go get -u gorm.io/gorm
 ```
 
+### 安装 postgres
+```
+go get -u gorm.io/gorm.io/driver/postgres
+```
+
+### 安装 errors
+```
+go get github.com/pkg/errors
+```
+
+### 安装 go-redis
+```
+go get -u github.com/go-redis/redis/v8
 ```
 
 

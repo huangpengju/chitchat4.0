@@ -27,7 +27,7 @@ type ServerConfig struct {
 	JWTSecret              string                  `yaml:"jwtSecret"`              // jsonWebToken
 }
 
-// DBConfig 数据库配置
+// DBConfig 是PostgreSQL数据库配置
 type DBConfig struct {
 	Host     string `yaml:"host"`     // 数据库主机
 	Port     int    `yaml:"port"`     // 数据库端口
@@ -37,6 +37,7 @@ type DBConfig struct {
 	Migrate  bool   `yaml:"migrate"`  // 迁移（是否自动迁移）
 }
 
+// RedisConfig 是 Redis 数据库配置
 type RedisConfig struct {
 	Enable   bool   `yaml:"enable"`
 	Host     string `yaml:"host"`
