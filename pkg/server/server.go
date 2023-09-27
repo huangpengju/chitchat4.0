@@ -1,6 +1,9 @@
 package server
 
 import (
+	"fmt"
+	"os"
+
 	"chitchat4.0/pkg/config"
 	"chitchat4.0/pkg/database"
 	"chitchat4.0/pkg/repository"
@@ -22,24 +25,23 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	// 1. 准备限速的中间件
 	// middleware.RateLimitMiddleware(conf.Server.LimitConfig)
 	// fmt.Println("logger=", logger)
-	// os.Exit(0)
+
 	db, err := database.NewPostgres(&conf.DB)
 	if err != nil {
 		return nil, errors.Wrap(err, "db 初始化失败")
 	}
-
 	rdb, err := database.NewRedisClient(&conf.Redis)
 	if err != nil {
-		return nil, errors.Wrap(err, "创建Reids 客户端失败")
+		return nil, errors.Wrap(err, "创建 Reids 客户端失败")
 	}
-
 	repository := repository.NewRepository(db, rdb)
 	if conf.DB.Migrate {
 		if err := repository.Migrate(); err != nil {
 			return nil, err
 		}
 	}
-
+	fmt.Println(repository)
+	os.Exit(0)
 	gin.SetMode(conf.Server.ENV) // 设置应用的模式(debug|release)
 
 	e := gin.New() // 定义一个 gin 引擎 (不带中间件的路由)

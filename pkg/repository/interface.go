@@ -30,7 +30,7 @@ type TagRepository interface {
 
 // HotSearchRepository 热搜列表仓库接口
 type HotSearchRepository interface {
-	List() ([]model.HostSearch, error)
-	Create(*model.Tag, *model.HostSearch) (*model.HostSearch, error)
+	List() ([]model.HotSearch, error)
+	Create(*model.Tag, *model.HotSearch) (*model.HotSearch, error)
 	Migrate() error
 }

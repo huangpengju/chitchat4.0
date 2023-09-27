@@ -37,7 +37,7 @@ redis:
   enable: true
   port: 6379 
   host: "localhost"
-  password: "123456"
+  password: "Aa_123456"
 
 oauth:
   github:
