@@ -3,6 +3,7 @@ package server
 import (
 	"chitchat4.0/pkg/config"
 	"chitchat4.0/pkg/database"
+	"chitchat4.0/pkg/repository"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -15,6 +16,8 @@ type Server struct {
 	logger *logrus.Logger
 }
 
+// New 接收两个参数，参数1是配置文件指针 *Config，参数2是日志记录器 *Logger 。
+// 作用：返回一个配置好的服务 *Server
 func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	// 1. 准备限速的中间件
 	// middleware.RateLimitMiddleware(conf.Server.LimitConfig)
@@ -28,6 +31,13 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	rdb, err := database.NewRedisClient(&conf.Redis)
 	if err != nil {
 		return nil, errors.Wrap(err, "创建Reids 客户端失败")
+	}
+
+	repository := repository.NewRepository(db, rdb)
+	if conf.DB.Migrate {
+		if err := repository.Migrate(); err != nil {
+			return nil, err
+		}
 	}
 
 	gin.SetMode(conf.Server.ENV) // 设置应用的模式(debug|release)

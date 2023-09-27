@@ -1,0 +1,36 @@
+package repository
+
+import "chitchat4.0/pkg/model"
+
+type Repository interface {
+	User() UserRepository
+	Tag() TagRepository
+	HotSearch() HotSearchRepository
+
+	Migrant
+}
+
+type Migrant interface {
+	Migrate() error
+}
+
+// User 用户接口
+type UserRepository interface {
+	List() (model.Users, error)
+	Create(*model.User) (*model.User, error)
+	Migrate() error
+}
+
+// Tag 标签接口
+type TagRepository interface {
+	List() ([]model.Tag, error)
+	Create(*model.User, *model.Tag) (*model.Tag, error)
+	Migrate() error
+}
+
+// HotSearchRepository 热搜列表仓库接口
+type HotSearchRepository interface {
+	List() ([]model.HostSearch, error)
+	Create(*model.Tag, *model.HostSearch) (*model.HostSearch, error)
+	Migrate() error
+}
