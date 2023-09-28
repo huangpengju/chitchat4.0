@@ -7,6 +7,7 @@ import (
 	"chitchat4.0/pkg/config"
 	"chitchat4.0/pkg/database"
 	"chitchat4.0/pkg/repository"
+	"chitchat4.0/pkg/service"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -40,6 +41,11 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 			return nil, err
 		}
 	}
+
+	userService := service.NewUserService(repository.User())
+	tagService := service.NewTagService(repository.Tag())
+	hotSearchService := service.NewHotSearchService(repository.HotSearch())
+
 	fmt.Println(repository)
 	os.Exit(0)
 	gin.SetMode(conf.Server.ENV) // 设置应用的模式(debug|release)

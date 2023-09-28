@@ -40,7 +40,7 @@ type repository struct {
 	db  *gorm.DB
 	rdb *database.RedisDB
 
-	migrates []Migrant
+	migrates []Migrant // 用于各模型迁移
 }
 
 func (r *repository) User() UserRepository {
