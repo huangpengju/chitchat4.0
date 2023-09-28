@@ -2,23 +2,23 @@ package server
 
 import (
 	"fmt"
-	"os"
+	"net/http"
+
+	docs "chitchat4.0/docs"
 
 	"chitchat4.0/pkg/config"
+	"chitchat4.0/pkg/controller"
 	"chitchat4.0/pkg/database"
 	"chitchat4.0/pkg/repository"
 	"chitchat4.0/pkg/service"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-)
 
-// Server 自定义一个服务
-type Server struct {
-	engine *gin.Engine
-	config *config.Config
-	logger *logrus.Logger
-}
+	// swagger embed files
+	swaggerfiles "github.com/swaggo/files"     // swagger embed files
+	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
+)
 
 // New 接收两个参数，参数1是配置文件指针 *Config，参数2是日志记录器 *Logger 。
 // 作用：返回一个配置好的服务 *Server
@@ -46,25 +46,58 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	tagService := service.NewTagService(repository.Tag())
 	hotSearchService := service.NewHotSearchService(repository.HotSearch())
 
-	fmt.Println(repository)
-	os.Exit(0)
+	userController := controller.NewUserController(userService)
+	tagController := controller.NewTagController(tagService)
+	hotSearchController := controller.NewHotSearchController(hotSearchService)
+
+	controllers := []controller.Controller{userController, tagController, hotSearchController}
+
 	gin.SetMode(conf.Server.ENV) // 设置应用的模式(debug|release)
 
 	e := gin.New() // 定义一个 gin 引擎 (不带中间件的路由)
 	e.Use(         // 挂载中间件
 		gin.Recovery(), // Recovery 返回一个中间件，可以从任何恐慌中恢复
+
 	)
 
 	// 返回一个服务
 	return &Server{
-		engine: e,
-		config: conf,
-		logger: logger,
+		engine:      e,
+		config:      conf,
+		logger:      logger,
+		controllers: controllers,
 	}, nil
 }
 
-func (s *Server) Run() error {
+// Server 自定义一个服务
+type Server struct {
+	engine *gin.Engine
+	config *config.Config
+	logger *logrus.Logger
 
-	var err error
-	return err
+	controllers []controller.Controller
+}
+
+func (s *Server) Run() error {
+	s.initRouter()
+	// var err error
+
+	addr := fmt.Sprintf("%s:%d", s.config.Server.Address, s.config.Server.Port)
+	s.logger.Infof("启动服务器：%s", addr)
+	server := &http.Server{
+		Addr:    addr,
+		Handler: s.engine,
+	}
+	server.ListenAndServe()
+	return nil
+}
+
+func (s *Server) initRouter() {
+
+	root := s.engine
+
+	if gin.Mode() != gin.ReleaseMode {
+		docs.SwaggerInfo.BasePath = "/"
+		root.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	}
 }

@@ -73,8 +73,8 @@ func main() {
 	if err != nil {
 		logger.Fatalf("初始化服务器失败：%v", err)
 	}
+
 	// 6.
-	os.Exit(0)
 	if err := s.Run(); err != nil {
 		logger.Fatalf("服务器启动失败：%v", err)
 	}
