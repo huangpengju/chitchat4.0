@@ -1,6 +1,10 @@
 package controller
 
 import (
+	"net/http"
+
+	"chitchat4.0/pkg/common"
+	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/service"
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +27,18 @@ func NewUserController(userService service.UserService) Controller {
 // @Success 200 {object} common.Response{data=model.Users}
 // @Router /api/v1/users [get]
 func (u *UserController) List(c *gin.Context) {
+	createdUser := new(model.CreatedUser)
+	if err := c.BindJSON(createdUser); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+
+	user := createdUser.GetUser()
+	if err := u.userService.Validate(user); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+	}
+
+	u.userService.Default(user)
 
 }
 
