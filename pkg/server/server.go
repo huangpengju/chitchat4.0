@@ -1,18 +1,24 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	docs "chitchat4.0/docs"
 
+	"chitchat4.0/pkg/common"
 	"chitchat4.0/pkg/config"
 	"chitchat4.0/pkg/controller"
 	"chitchat4.0/pkg/database"
 	"chitchat4.0/pkg/repository"
 	"chitchat4.0/pkg/service"
+	"chitchat4.0/pkg/utils/set"
+	"chitchat4.0/pkg/version"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sirupsen/logrus"
 
 	// swagger embed files
@@ -75,6 +81,7 @@ type Server struct {
 	config *config.Config
 	logger *logrus.Logger
 
+	repository  repository.Repository
 	controllers []controller.Controller
 }
 
@@ -96,8 +103,50 @@ func (s *Server) initRouter() {
 
 	root := s.engine
 
+	root.GET("/", common.WrapFunc(s.getRouters))
+	root.GET("/index", controller.Index)
+	root.GET("/healthz", common.WrapFunc(s.Ping))
+	root.GET("/version", common.WrapFunc(version.Get))
+	root.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	root.Any("/debug/pprof/*any", gin.WrapH(http.DefaultServeMux))
+
 	if gin.Mode() != gin.ReleaseMode {
 		docs.SwaggerInfo.BasePath = "/"
 		root.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	}
+	api := root.Group("/api/v1")
+	controllers := make([]string, 0, len(s.controllers))
+	for _, router := range s.controllers {
+		router.RegisterRoute(api)
+		controllers = append(controllers, router.Name())
+	}
+	logrus.Info("服务器启用控制器：%v", controllers)
+}
+
+func (s *Server) getRouters() []string {
+	paths := set.NewString()
+
+	for _, r := range s.engine.Routes() {
+		if r.Path != "" {
+			paths.Insert(r.Path)
+		}
+	}
+	return paths.Slice()
+}
+
+type ServerStatus struct {
+	Ping         bool `json:"ping"`
+	DBRepository bool `json:"dbRepository"`
+}
+
+func (s *Server) Ping() *ServerStatus {
+	status := &ServerStatus{Ping: true}
+
+	ctx, cannel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cannel()
+
+	if err := s.repository.Ping(ctx); err == nil {
+		status.DBRepository = true
+	}
+	return status
 }

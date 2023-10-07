@@ -1,11 +1,17 @@
 package repository
 
-import "chitchat4.0/pkg/model"
+import (
+	"context"
+
+	"chitchat4.0/pkg/model"
+)
 
 type Repository interface {
 	User() UserRepository
 	Tag() TagRepository
 	HotSearch() HotSearchRepository
+
+	Ping(ctx context.Context) error
 
 	Migrant
 }

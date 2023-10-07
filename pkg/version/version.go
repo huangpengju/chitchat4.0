@@ -40,3 +40,7 @@ func Print() {
 	data, _ := json.MarshalIndent(version, "", "    ")
 	fmt.Println(string(data))
 }
+
+func Get() *Version {
+	return version
+}
