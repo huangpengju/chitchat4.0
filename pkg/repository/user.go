@@ -1,9 +1,15 @@
 package repository
 
 import (
+	"strconv"
+
 	"chitchat4.0/pkg/database"
 	"chitchat4.0/pkg/model"
 	"gorm.io/gorm"
+)
+
+var (
+	userCreateField = []string{"name", "email", "password", "avatar"}
 )
 
 // userRepository 是定义的用户仓库（属于大仓库中的小仓库），
@@ -40,13 +46,20 @@ func (u *userRepository) List() (model.Users, error) {
 // Create 是使用 *userRepository 接收器定义的方法，
 // 作用：实现了 UserRepository 仓库接口的 Create 方法
 func (u *userRepository) Create(user *model.User) (*model.User, error) {
-	// if err := u.db.Select(userCreateField).Create(user).Error; err != nil {
-	// 	return nil, err
-	// }
+	if err := u.db.Select(userCreateField).Create(user).Error; err != nil {
+		return nil, err
+	}
 
-	// u.setCacheUser(user)
+	u.setCacheUser(user)
 
 	return user, nil
+}
+
+func (u *userRepository) setCacheUser(user *model.User) error {
+	if user == nil {
+		return nil
+	}
+	return u.rdb.HSet(user.CacheKey(), strconv.Itoa(int(user.ID)), user)
 }
 
 func (u *userRepository) Migrate() error {

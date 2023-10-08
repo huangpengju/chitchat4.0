@@ -22,6 +22,10 @@ func NewResponse(c *gin.Context, code int, data interface{}, msg string) {
 	})
 }
 
+func ResponseSuccess(c *gin.Context, data interface{}) {
+	NewResponse(c, http.StatusOK, data, "success")
+}
+
 // ResponseFailed 响应失败时做相关处理
 func ResponseFailed(c *gin.Context, code int, err error) {
 	if code == 0 {

@@ -11,6 +11,13 @@ type User struct {
 	BaseModel
 }
 
+func (*User) TableName() string {
+	return "users"
+}
+func (u *User) CacheKey() string {
+	return u.TableName() + ":id"
+}
+
 // Users 变量是用户切片类型
 type Users []User
 

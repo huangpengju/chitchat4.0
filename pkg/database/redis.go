@@ -36,3 +36,10 @@ func NewRedisClient(conf *config.RedisConfig) (*RedisDB, error) {
 		Client: rdb,
 	}, nil
 }
+
+func (rdb *RedisDB) HSet(key, field string, val interface{}) error {
+	if !rdb.enable {
+		return nil
+	}
+	return rdb.Client.HSet(context.Background(), key, field, val).Err()
+}

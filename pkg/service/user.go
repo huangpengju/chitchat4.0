@@ -6,6 +6,7 @@ import (
 
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -33,13 +34,12 @@ func (u *userService) List() (model.Users, error) {
 
 // Create 创建用户服务
 func (u *userService) Create(user *model.User) (*model.User, error) {
-	// if err := u.db.Select(userCreateField).Create(user).Error; err != nil {
-	// 	return nil, err
-	// }
-
-	// u.setCacheUser(user)
-
-	return user, nil
+	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+	user.Password = string(password)
+	return u.userRepository.Create(user)
 }
 
 // Get 获取用户服务
