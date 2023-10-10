@@ -59,6 +59,10 @@ go get -u github.com/go-redis/redis/v8
 go get github.com/go-logr/logr
 ```
 
+### cors 跨域
+```
+go get github.com/gin-contrib/cors
+```
 
 ### ini
 ```

@@ -20,13 +20,6 @@ func NewUserController(userService service.UserService) Controller {
 	}
 }
 
-// @Summary List user
-// @Description 列出用户和存储
-// @Produce json
-// @Tags user
-// @Security JWT
-// @Success 200 {object} common.Response{data=model.Users}
-// @Router /api/v1/users [get]
 func (u *UserController) List(c *gin.Context) {
 
 }
@@ -66,39 +59,14 @@ func (u *UserController) Create(c *gin.Context) {
 	common.ResponseSuccess(c, user)
 }
 
-// @Summary Get user
-// @Description 获取用户和存储
-// @Produce json
-// @Tags user
-// @Security JWT
-// @Param id path int true "user id"
-// @Success 200 {object} common.Response{data=model.User}
-// @Router /api/v1/users/{id} [get]
 func (u *UserController) Get(c *gin.Context) {
 
 }
 
-// @Summary Update user
-// @Description 更新用户和存储
-// @Accept json
-// @Produce json
-// @Tags user
-// @Security JWT
-// @Param id   path      int  true  "user id"
-// @Success 200 {object} common.Response{data=model.User}
-// @Router /api/v1/users/{id} [put]
 func (u *UserController) Update(c *gin.Context) {
 
 }
 
-// @Summary Delete user
-// @Description 删除用户和存储
-// @Produce json
-// @Tags user
-// @Security JWT
-// @Param id path int true "user id"
-// @Success 200 {object} common.Response
-// @Router /api/v1/users/{id} [delete]
 func (u *UserController) Delete(c *gin.Context) {
 
 }

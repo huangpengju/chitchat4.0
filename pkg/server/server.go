@@ -12,6 +12,7 @@ import (
 	"chitchat4.0/pkg/config"
 	"chitchat4.0/pkg/controller"
 	"chitchat4.0/pkg/database"
+	"chitchat4.0/pkg/middleware"
 	"chitchat4.0/pkg/repository"
 	"chitchat4.0/pkg/service"
 	"chitchat4.0/pkg/utils/set"
@@ -64,6 +65,8 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	e.Use(         // 挂载中间件
 		gin.Recovery(), // Recovery 返回一个中间件，可以从任何恐慌中恢复
 
+		middleware.CORSMiddleware(), // CORSMiddleware() 加载cors跨域中间件
+
 	)
 
 	// 返回一个服务
@@ -105,6 +108,7 @@ func (s *Server) initRouter() {
 
 	root.GET("/", common.WrapFunc(s.getRouters))
 	root.GET("/index", controller.Index)
+
 	root.GET("/healthz", common.WrapFunc(s.Ping))
 	root.GET("/version", common.WrapFunc(version.Get))
 	root.GET("/metrics", gin.WrapH(promhttp.Handler()))

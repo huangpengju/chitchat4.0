@@ -49,43 +49,7 @@ info:
   title: ChitChat API
   version: "4.0"
 paths:
-  /admin:
-    get:
-      consumes:
-      - application/json
-      description: do ping
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: ping example
-      tags:
-      - example
   /api/v1/users:
-    get:
-      description: 列出用户和存储
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/common.Response'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/model.User'
-                  type: array
-              type: object
-      security:
-      - JWT: []
-      summary: List user
-      tags:
-      - user
     post:
       consumes:
       - application/json
@@ -114,81 +78,9 @@ paths:
       summary: Create user
       tags:
       - user
-  /api/v1/users/{id}:
-    delete:
-      description: 删除用户和存储
-      parameters:
-      - description: user id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/common.Response'
-      security:
-      - JWT: []
-      summary: Delete user
-      tags:
-      - user
-    get:
-      description: 获取用户和存储
-      parameters:
-      - description: user id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/common.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.User'
-              type: object
-      security:
-      - JWT: []
-      summary: Get user
-      tags:
-      - user
-    put:
-      consumes:
-      - application/json
-      description: 更新用户和存储
-      parameters:
-      - description: user id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/common.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.User'
-              type: object
-      security:
-      - JWT: []
-      summary: Update user
-      tags:
-      - user
   /index:
     get:
+      description: 加载简单的后端主页 html 代码
       produces:
       - text/html
       responses: {}
