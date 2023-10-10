@@ -108,7 +108,7 @@ func (u *UserController) RegisterRoute(api *gin.RouterGroup) {
 	api.GET("/users", u.List)
 	api.POST("/users", u.Create)
 	api.GET("/users/:id", u.Get)
-	api.PUT("/users::id", u.Update)
+	api.PUT("/users:id", u.Update)
 	api.DELETE("/users/:id", u.Delete)
 }
 

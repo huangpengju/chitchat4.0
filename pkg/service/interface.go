@@ -18,7 +18,7 @@ type TagService interface {
 	// Get(string) (*model.Tag, error)
 	// Update(string, *model.Tag) (*model.Tag, error)
 	// Delete(string) error
-	Validate(*model.Tag) error
+	// Validate(*model.Tag) error
 }
 
 type HotSearchService interface {
@@ -27,5 +27,5 @@ type HotSearchService interface {
 	// Get(string) (*model.HotSearch, error)
 	// Update(string, *model.HotSearch) (*model.HotSearch, error)
 	// Delete(string) error
-	Validate(*model.HotSearch) error
+	// Validate(*model.HotSearch) error
 }

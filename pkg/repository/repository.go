@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"context"
+
 	"chitchat4.0/pkg/database"
 	"gorm.io/gorm"
 )
@@ -53,6 +55,27 @@ func (r *repository) Tag() TagRepository {
 
 func (r *repository) HotSearch() HotSearchRepository {
 	return r.hotSearch
+}
+
+// Ping 是使用 *repository 接收器定义的方法，
+// 作用：实现了 Repository 仓库接口的 Ping 方法
+func (r *repository) Ping(ctx context.Context) error {
+	db, err := r.db.DB()
+	if err != nil {
+		return err
+	}
+	if err = db.PingContext(ctx); err != nil {
+		return err
+	}
+
+	if r.rdb == nil {
+		return nil
+	}
+	if _, err := r.rdb.Ping(ctx).Result(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *repository) Migrate() error {

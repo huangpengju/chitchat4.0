@@ -54,6 +54,11 @@ go get github.com/pkg/errors
 go get -u github.com/go-redis/redis/v8
 ```
 
+### 安装 适用于 Go 的最小日志记录 API
+```
+go get github.com/go-logr/logr
+```
+
 
 ### ini
 ```

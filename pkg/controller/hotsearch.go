@@ -81,7 +81,7 @@ func (h *HotSearchController) RegisterRoute(api *gin.RouterGroup) {
 	api.GET("/hotsearchs", h.List)
 	api.POST("/hotsearchs", h.Create)
 	api.GET("/hotsearchs/:id", h.Get)
-	api.PUT("/hotsearchs::id", h.Update)
+	api.PUT("/hotsearchs:id", h.Update)
 	api.DELETE("/hotsearchs/:id", h.Delete)
 }
 func (h *HotSearchController) Name() string {
