@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -x
-set -e
-
-if [ "$(git status --porcelain | egrep '*.go')" ]; then
-    make
-fi
