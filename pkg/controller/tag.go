@@ -57,7 +57,6 @@ func (t *TagController) Get(c *gin.Context) {
 // @Produce json
 // @Tags user
 // @Security JWT
-// @Param user body model.UpdatedUser true "user info"
 // @Param id   path      int  true  "user id"
 // @Success 200 {object} common.Response{data=model.User}
 // @Router /api/v1/users/{id} [put]
