@@ -53,8 +53,8 @@ func (u *UserController) Create(c *gin.Context) {
 	u.userService.Default(user)
 
 	// 追踪步骤：开启创建 user
-	common.TraceStep(c, "start create user", trace.Field{"user", user.Name})
-	defer common.TraceStep(c, "create user done", trace.Field{"user", user.Name})
+	common.TraceStep(c, "start create user", trace.Field{Key: "user", Value: user.Name})
+	defer common.TraceStep(c, "create user done", trace.Field{Key: "user", Value: user.Name})
 	user, err := u.userService.Create(user)
 	if err != nil {
 		common.ResponseFailed(c, http.StatusInternalServerError, err)
@@ -62,8 +62,21 @@ func (u *UserController) Create(c *gin.Context) {
 	common.ResponseSuccess(c, user)
 }
 
+// @Summary Get user / 获取单个用户
+// @Description 获取用户并保存
+// @Produce json
+// @Tags user
+// @Security JWT
+// @Param id path int true "user id"
+// @Success 200 {object} common.Response{data=model.User}
+// @Router /api/v1/users/{id} [get]
 func (u *UserController) Get(c *gin.Context) {
-
+	user, err := u.userService.Get(c.Param("id"))
+	if err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	common.ResponseSuccess(c, user)
 }
 
 func (u *UserController) Update(c *gin.Context) {
@@ -77,7 +90,7 @@ func (u *UserController) Delete(c *gin.Context) {
 func (u *UserController) RegisterRoute(api *gin.RouterGroup) {
 	// api.GET("/users", u.List)
 	api.POST("/users", u.Create)
-	// api.GET("/users/:id", u.Get)
+	api.GET("/users/:id", u.Get)
 	// api.PUT("/users:id", u.Update)
 	// api.DELETE("/users/:id", u.Delete)
 }

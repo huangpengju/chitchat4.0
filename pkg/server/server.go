@@ -32,10 +32,10 @@ import (
 // 作用：返回一个配置好的服务 *Server
 func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	// 1. 准备限速的中间件
-	rateLimitMiddleware, err := middleware.RateLimitMiddleware(conf.Server.LimitConfig)
-	if err != nil {
-		return nil, err
-	}
+	// rateLimitMiddleware, err := middleware.RateLimitMiddleware(conf.Server.LimitConfig)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	// fmt.Println("logger=", logger)
 
 	db, err := database.NewPostgres(&conf.DB)
@@ -67,7 +67,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 
 	e := gin.New() // 定义一个 gin 引擎 (不带中间件的路由)
 	e.Use(         // 挂载中间件
-		rateLimitMiddleware,
+		// rateLimitMiddleware,
 		gin.Recovery(), // Recovery 返回一个中间件，可以从任何恐慌中恢复
 
 		middleware.CORSMiddleware(), // CORSMiddleware() 加载cors跨域中间件

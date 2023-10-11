@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/repository"
@@ -44,8 +45,7 @@ func (u *userService) Create(user *model.User) (*model.User, error) {
 
 // Get 获取用户服务
 func (u *userService) Get(id string) (*model.User, error) {
-	user := &model.User{}
-	return user, nil
+	return u.getUserByID(id)
 }
 
 // Validate 验证用户数据
@@ -70,4 +70,12 @@ func (u *userService) Default(user *model.User) {
 	if user.Email == "" {
 		user.Email = fmt.Sprintf("%s@qinng.io", user.Name)
 	}
+}
+
+func (u *userService) getUserByID(id string) (*model.User, error) {
+	uid, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+	return u.userRepository.GetUserByID(uint(uid))
 }

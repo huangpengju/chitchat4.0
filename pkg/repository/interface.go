@@ -22,6 +22,7 @@ type Migrant interface {
 
 // User 用户接口
 type UserRepository interface {
+	GetUserByID(uint) (*model.User, error)
 	List() (model.Users, error)
 	Create(*model.User) (*model.User, error)
 	Migrate() error

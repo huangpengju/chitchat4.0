@@ -78,6 +78,32 @@ paths:
       summary: 创建 user
       tags:
       - user
+  /api/v1/users/{id}:
+    get:
+      description: 获取用户并保存
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.User'
+              type: object
+      security:
+      - JWT: []
+      summary: Get user / 获取单个用户
+      tags:
+      - user
   /index:
     get:
       description: 返回后端主页 html 源代码

@@ -5,6 +5,7 @@ import (
 
 	"chitchat4.0/pkg/database"
 	"chitchat4.0/pkg/model"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -52,6 +53,19 @@ func (u *userRepository) Create(user *model.User) (*model.User, error) {
 
 	u.setCacheUser(user)
 
+	return user, nil
+}
+
+func (u *userRepository) GetUserByID(id uint) (*model.User, error) {
+
+	user := new(model.User)
+
+	if err := u.db.Omit("Password").First(user, id).Error; err != nil {
+		return nil, err
+	}
+	if err := u.setCacheUser(user); err != nil {
+		logrus.Errorf("无法设置用户：%v", err)
+	}
 	return user, nil
 }
 
