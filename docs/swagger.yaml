@@ -53,9 +53,9 @@ paths:
     post:
       consumes:
       - application/json
-      description: 创建用户和存储
+      description: 创建用户并存储
       parameters:
-      - description: user info
+      - description: user 信息
         in: body
         name: user
         required: true
@@ -75,12 +75,12 @@ paths:
               type: object
       security:
       - JWT: []
-      summary: Create user
+      summary: 创建 user
       tags:
       - user
   /index:
     get:
-      description: 加载简单的后端主页 html 代码
+      description: 返回后端主页 html 源代码
       produces:
       - text/html
       responses: {}

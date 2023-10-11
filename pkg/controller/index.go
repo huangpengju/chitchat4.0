@@ -7,7 +7,7 @@ import (
 )
 
 // @Summary Home
-// @Description 加载简单的后端主页 html 代码
+// @Description 返回后端主页 html 源代码
 // @Produce html
 // @Tags home
 // @Router /index [get]

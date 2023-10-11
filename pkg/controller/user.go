@@ -24,13 +24,13 @@ func (u *UserController) List(c *gin.Context) {
 
 }
 
-// @Summary Create user
-// @Description 创建用户和存储
+// @Summary 创建 user
+// @Description 创建用户并存储
 // @Accept json
 // @Produce json
 // @Tags user
 // @Security JWT
-// @Param user body model.CreatedUser true "user info"
+// @Param user body model.CreatedUser true "user 信息"
 // @Success 200 {object} common.Response{data=model.User}
 // @Router /api/v1/users [post]
 func (u *UserController) Create(c *gin.Context) {
@@ -42,6 +42,7 @@ func (u *UserController) Create(c *gin.Context) {
 		common.ResponseFailed(c, http.StatusBadRequest, err)
 		return
 	}
+
 	// 把 createdUser 的值赋值给 User 的结构模型
 	user := createdUser.GetUser()
 	// 验证 user 的用户名和密码
@@ -72,11 +73,11 @@ func (u *UserController) Delete(c *gin.Context) {
 }
 
 func (u *UserController) RegisterRoute(api *gin.RouterGroup) {
-	api.GET("/users", u.List)
+	// api.GET("/users", u.List)
 	api.POST("/users", u.Create)
-	api.GET("/users/:id", u.Get)
-	api.PUT("/users:id", u.Update)
-	api.DELETE("/users/:id", u.Delete)
+	// api.GET("/users/:id", u.Get)
+	// api.PUT("/users:id", u.Update)
+	// api.DELETE("/users/:id", u.Delete)
 }
 
 func (u *UserController) Name() string {

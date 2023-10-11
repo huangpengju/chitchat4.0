@@ -30,7 +30,7 @@ const docTemplate = `{
                         "JWT": []
                     }
                 ],
-                "description": "创建用户和存储",
+                "description": "创建用户并存储",
                 "consumes": [
                     "application/json"
                 ],
@@ -40,10 +40,10 @@ const docTemplate = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "Create user",
+                "summary": "创建 user",
                 "parameters": [
                     {
-                        "description": "user info",
+                        "description": "user 信息",
                         "name": "user",
                         "in": "body",
                         "required": true,
@@ -76,7 +76,7 @@ const docTemplate = `{
         },
         "/index": {
             "get": {
-                "description": "加载简单的后端主页 html 代码",
+                "description": "返回后端主页 html 源代码",
                 "produces": [
                     "text/html"
                 ],

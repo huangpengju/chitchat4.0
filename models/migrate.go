@@ -1,7 +1,7 @@
 package models
 
 import (
-	"chitchat4.0/pkg/setting"
+	"chitchat4.0/models/setting"
 )
 
 func migration() {

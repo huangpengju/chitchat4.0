@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"chitchat4.0/pkg/setting"
+	"chitchat4.0/models/setting"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/lib/pq"
