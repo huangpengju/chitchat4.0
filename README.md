@@ -64,6 +64,12 @@ go get github.com/go-logr/logr
 go get github.com/gin-contrib/cors
 ```
 
+### 安装 logrusr
+```
+go get github.com/bombsimon/logrusr/v2
+```
+
+
 ### ini
 ```
 go get -u gopkg.in/ini.v1

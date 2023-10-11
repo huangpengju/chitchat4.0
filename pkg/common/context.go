@@ -2,6 +2,7 @@ package common
 
 import (
 	"chitchat4.0/pkg/model"
+	"chitchat4.0/pkg/utils/request"
 	"chitchat4.0/pkg/utils/trace"
 	"github.com/gin-gonic/gin"
 )
@@ -40,6 +41,13 @@ func GetTrace(c *gin.Context) *trace.Trace {
 	return trace
 }
 
+func SetTrace(c *gin.Context, t *trace.Trace) {
+	if c == nil || t == nil {
+		return
+	}
+	c.Set(TraceContextKey, t)
+}
+
 // TraceStep 追踪步骤，
 // 参数1：c *gin.Context，
 // 参数2：start create user，
@@ -49,4 +57,12 @@ func TraceStep(c *gin.Context, msg string, fields ...trace.Field) {
 	if trace != nil {
 		trace.Step(msg, fields...)
 	}
+}
+
+func SetRequestInfo(c *gin.Context, ri *request.RequestInfo) {
+	if c == nil || ri == nil {
+		return
+	}
+
+	c.Set(RequestInfoContextKey, ri)
 }

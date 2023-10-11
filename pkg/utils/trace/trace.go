@@ -71,7 +71,7 @@ func (f Field) format() string {
 type Trace struct {
 	name        string
 	fields      []Field
-	threshold   *time.Duration
+	threshold   *time.Duration // 临界值
 	startTime   time.Time
 	endTime     *time.Time
 	traceItems  []traceItem
@@ -135,6 +135,7 @@ func (t *Trace) calculateStepThreshold() *time.Duration {
 	stepThreshold := traceThreshold / time.Duration(lenTrace)
 	return &stepThreshold
 }
+
 func (t *Trace) logTrace() {
 	if t.durationIsWithinThreshold() {
 		var buffer bytes.Buffer
@@ -172,4 +173,34 @@ func (t *Trace) durationIsWithinThreshold() bool {
 		return false
 	}
 	return t.threshold == nil || *t.threshold == 0 || t.endTime.Sub(t.startTime) >= *t.threshold
+}
+
+// New将创建具有指定名称的Trace。名称标识要跟踪的操作。这个
+// 字段添加键值对，以提供有关跟踪的其他详细信息，例如操作输入。
+func New(name string, logger logr.Logger, fields ...Field) *Trace {
+	return &Trace{name: name, startTime: time.Now(), fields: fields, logger: logger}
+}
+
+// LogIfLong仅在跟踪持续时间超过阈值时才记录跟踪。
+// 只记录花费的时间超过其份额或给定阈值的步骤。
+// 如果klog处于详细级别4或更高，并且跟踪花费的时间长于阈值，
+// 记录所有子步骤和子空间。否则，只有那些耗时超过
+// 他们自己的门槛。
+// 如果跟踪是嵌套的，则不会立即记录它。相反，当跟踪
+// 嵌套在中。
+func (t *Trace) LogIfLong(threshold time.Duration) {
+	t.threshold = &threshold
+	t.Log()
+}
+
+// Log用于转储Trace中的所有步骤。它还使用缩进记录嵌套的跟踪消息。
+// 如果跟踪是嵌套的，则不会立即记录它。相反，当它嵌套在跟踪中时，它会被记录
+// 已记录。
+func (t *Trace) Log() {
+	endTime := time.Now()
+	t.endTime = &endTime
+	// an explicit logging request should dump all the steps out at the higher level
+	if t.parentTrace == nil { // We don't start logging until Log or LogIfLong is called on the root trace
+		t.logTrace()
+	}
 }

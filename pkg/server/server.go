@@ -15,6 +15,7 @@ import (
 	"chitchat4.0/pkg/middleware"
 	"chitchat4.0/pkg/repository"
 	"chitchat4.0/pkg/service"
+	"chitchat4.0/pkg/utils/request"
 	"chitchat4.0/pkg/utils/set"
 	"chitchat4.0/pkg/version"
 	"github.com/gin-gonic/gin"
@@ -67,6 +68,11 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 
 		middleware.CORSMiddleware(), // CORSMiddleware() 加载cors跨域中间件
 
+		middleware.RequestInfoMiddleware(&request.RequestInfoFactory{APIPrefixes: set.NewString("api")}),
+
+		middleware.LogMiddleware(logger, "/"), // 日志中间件
+
+		middleware.TraceMiddleware(), // 追踪中间件
 	)
 
 	// 返回一个服务
@@ -124,7 +130,7 @@ func (s *Server) initRouter() {
 		router.RegisterRoute(api)
 		controllers = append(controllers, router.Name())
 	}
-	logrus.Info("服务器启用控制器：%v", controllers)
+	logrus.Infof("服务器启用控制器：%v", controllers)
 }
 
 func (s *Server) getRouters() []string {
