@@ -51,6 +51,8 @@ func (u *UserController) Create(c *gin.Context) {
 	}
 	// user 邮箱为空时，设置默认邮箱
 	u.userService.Default(user)
+
+	// 追踪步骤：开启创建 user
 	common.TraceStep(c, "start create user", trace.Field{"user", user.Name})
 	defer common.TraceStep(c, "create user done", trace.Field{"user", user.Name})
 	user, err := u.userService.Create(user)

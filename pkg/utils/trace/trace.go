@@ -66,7 +66,7 @@ func (f Field) format() string {
 	return fmt.Sprintf("%s:%v", f.Key, f.Value)
 }
 
-// Trace跟踪一组“步骤”，并允许我们记录特定的
+// Trace 跟踪一组“步骤”，并允许我们记录特定的
 // 如果花费的时间超过其在总允许时间中所占的份额，则执行步骤
 type Trace struct {
 	name        string

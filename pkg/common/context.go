@@ -22,15 +22,17 @@ func GetUser(c *gin.Context) *model.User {
 	return user
 }
 
-// GetTrace 获取痕迹
+// GetTrace 获取追踪钥匙
 func GetTrace(c *gin.Context) *trace.Trace {
 	if c == nil {
 		return nil
 	}
+	// Get返回给定键的值，即:(value, true)。如果值不存在，则返回(nil, false)
 	val, ok := c.Get(TraceContextKey)
 	if !ok {
 		return nil
 	}
+	// val 进行类型断言，此处是指针类型断言
 	trace, ok := val.(*trace.Trace)
 	if !ok {
 		return nil
@@ -38,7 +40,10 @@ func GetTrace(c *gin.Context) *trace.Trace {
 	return trace
 }
 
-// TraceStep 痕迹步骤
+// TraceStep 追踪步骤，
+// 参数1：c *gin.Context，
+// 参数2：start create user，
+// 参数3： trace.Field{Key   string	Value interface{}}
 func TraceStep(c *gin.Context, msg string, fields ...trace.Field) {
 	trace := GetTrace(c)
 	if trace != nil {
