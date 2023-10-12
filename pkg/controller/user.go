@@ -10,18 +10,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UserController 用户控制器，
+// userService 字段表示 user 服务接口
 type UserController struct {
 	userService service.UserService
 }
 
+// NewUserController 创建 user 控制器，
+// 用于实现用 user 服务接口
 func NewUserController(userService service.UserService) Controller {
 	return &UserController{
 		userService: userService,
 	}
-}
-
-func (u *UserController) List(c *gin.Context) {
-
 }
 
 // @Summary 创建 user
@@ -48,6 +48,7 @@ func (u *UserController) Create(c *gin.Context) {
 	// 验证 user 的用户名和密码
 	if err := u.userService.Validate(user); err != nil {
 		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
 	}
 	// user 邮箱为空时，设置默认邮箱
 	u.userService.Default(user)
@@ -79,6 +80,17 @@ func (u *UserController) Get(c *gin.Context) {
 	common.ResponseSuccess(c, user)
 }
 
+// @Summary user 列表
+// @Description 获取 user 列表并保存
+// Produce json
+// @Tags user
+// @Security JWT
+// @Success 200 {object} common.Response{data=model.Users}
+// @Router /api/v1/users [get]
+func (u *UserController) List(c *gin.Context) {
+
+}
+
 func (u *UserController) Update(c *gin.Context) {
 
 }
@@ -88,7 +100,7 @@ func (u *UserController) Delete(c *gin.Context) {
 }
 
 func (u *UserController) RegisterRoute(api *gin.RouterGroup) {
-	// api.GET("/users", u.List)
+	api.GET("/users", u.List)
 	api.POST("/users", u.Create)
 	api.GET("/users/:id", u.Get)
 	// api.PUT("/users:id", u.Update)

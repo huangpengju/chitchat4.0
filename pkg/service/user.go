@@ -51,13 +51,13 @@ func (u *userService) Get(id string) (*model.User, error) {
 // Validate 验证用户数据
 func (u *userService) Validate(user *model.User) error {
 	if user == nil {
-		return errors.New("user is empty")
+		return errors.New("user 是空的")
 	}
 	if user.Name == "" {
-		return errors.New("user name is empty")
+		return errors.New("user 中 name 是空的")
 	}
 	if len(user.Password) < MinPasswordLength {
-		return fmt.Errorf("password length must great than %d", MinPasswordLength)
+		return fmt.Errorf("密码长度不能小于%d", MinPasswordLength)
 	}
 	return nil
 }

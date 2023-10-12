@@ -50,6 +50,25 @@ info:
   version: "4.0"
 paths:
   /api/v1/users:
+    get:
+      description: 获取 user 列表并保存
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.User'
+                  type: array
+              type: object
+      security:
+      - JWT: []
+      summary: user 列表
+      tags:
+      - user
     post:
       consumes:
       - application/json
