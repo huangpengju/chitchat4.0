@@ -65,6 +65,8 @@ func (u *userRepository) Create(user *model.User) (*model.User, error) {
 	key := user.CacheKey()
 	field := strconv.Itoa(int(user.ID))
 	if err := u.rdb.HGet(key, field, user1); err == nil {
+		fmt.Println("key=", key)
+		fmt.Println("field=", field)
 		fmt.Println("读取缓存中")
 
 		fmt.Println(user1)
