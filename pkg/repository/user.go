@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"strconv"
 
 	"chitchat4.0/pkg/database"
@@ -54,9 +55,22 @@ func (u *userRepository) Create(user *model.User) (*model.User, error) {
 
 	// 缓存用户
 	// u.setCacheUser(user)
+	fmt.Println("当前user=", user)
 	if err := u.setCacheUser(user); err != nil {
 		logrus.Errorf("redis 无法设置用户：%v", err)
 	}
+
+	fmt.Println("读取缓存")
+	user1 := new(model.User)
+	key := user.CacheKey()
+	field := strconv.Itoa(int(user.ID))
+	if err := u.rdb.HGet(key, field, user1); err == nil {
+		fmt.Println("读取缓存中")
+
+		fmt.Println(user1)
+
+	}
+	fmt.Println("读取缓存结束")
 
 	return user, nil
 }
