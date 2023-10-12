@@ -37,9 +37,14 @@ func NewRedisClient(conf *config.RedisConfig) (*RedisDB, error) {
 	}, nil
 }
 
+// HSet
+// 参数 key：users:id，
+// 参数 field：id，
+// 参数 val：user
 func (rdb *RedisDB) HSet(key, field string, val interface{}) error {
 	if !rdb.enable {
 		return nil
 	}
+	// 设置 key-value 键值对
 	return rdb.Client.HSet(context.Background(), key, field, val).Err()
 }

@@ -44,14 +44,19 @@ func (u *userRepository) List() (model.Users, error) {
 	return users, nil
 }
 
-// Create 是使用 *userRepository 接收器定义的方法，
-// 作用：实现了 UserRepository 仓库接口的 Create 方法
+// Create 实现 user 插入数据到数据库，
+// 是使用 *userRepository 接收器定义的方法，
+// 作用：实现了 user 仓库接口的 Create 方法
 func (u *userRepository) Create(user *model.User) (*model.User, error) {
 	if err := u.db.Select(userCreateField).Create(user).Error; err != nil {
 		return nil, err
 	}
 
-	u.setCacheUser(user)
+	// 缓存用户
+	// u.setCacheUser(user)
+	if err := u.setCacheUser(user); err != nil {
+		logrus.Errorf("redis 无法设置用户：%v", err)
+	}
 
 	return user, nil
 }
@@ -69,10 +74,14 @@ func (u *userRepository) GetUserByID(id uint) (*model.User, error) {
 	return user, nil
 }
 
+// setCacheUser 缓存 user
 func (u *userRepository) setCacheUser(user *model.User) error {
 	if user == nil {
 		return nil
 	}
+	// 参数1：表名:id
+	// 参数2：user的id
+	// 参数3：user
 	return u.rdb.HSet(user.CacheKey(), strconv.Itoa(int(user.ID)), user)
 }
 

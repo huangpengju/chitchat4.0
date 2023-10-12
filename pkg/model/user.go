@@ -1,5 +1,7 @@
 package model
 
+import "encoding/json"
+
 // User 用户结构
 type User struct {
 	ID       uint   `json:"id" gorm:"autoIncrement;primaryKey"`
@@ -11,11 +13,24 @@ type User struct {
 	BaseModel
 }
 
+// TableName 设置表名 uses
 func (*User) TableName() string {
 	return "users"
 }
+
+// CacheKey 返回表名和id，格式： users:id
 func (u *User) CacheKey() string {
 	return u.TableName() + ":id"
+}
+
+// MarshalBinary 用于把 user 结构体实现 MarshalBinary 方法，MarshalBinary
+func (u *User) MarshalBinary() ([]byte, error) {
+	return json.Marshal(u)
+}
+
+// UnmarshalBinary
+func (u *User) UnmarshalBinary(data []byte) error {
+	return json.Unmarshal(data, u)
 }
 
 // Users 变量是用户切片类型

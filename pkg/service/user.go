@@ -33,7 +33,7 @@ func (u *userService) List() (model.Users, error) {
 	return users, nil
 }
 
-// Create 创建用户服务
+// Create 创建 user 的服务
 func (u *userService) Create(user *model.User) (*model.User, error) {
 	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
