@@ -24,7 +24,7 @@ func NewUserController(userService service.UserService) Controller {
 	}
 }
 
-// @Summary 创建 user
+// @Summary Create user | 创建用户
 // @Description 创建用户并存储
 // @Accept json
 // @Produce json
@@ -63,7 +63,7 @@ func (u *UserController) Create(c *gin.Context) {
 	common.ResponseSuccess(c, user)
 }
 
-// @Summary Get user / 获取单个用户
+// @Summary Get user | 获取单个用户
 // @Description 获取用户并保存
 // @Produce json
 // @Tags user
@@ -72,6 +72,7 @@ func (u *UserController) Create(c *gin.Context) {
 // @Success 200 {object} common.Response{data=model.User}
 // @Router /api/v1/users/{id} [get]
 func (u *UserController) Get(c *gin.Context) {
+	// 调用用户服务
 	user, err := u.userService.Get(c.Param("id"))
 	if err != nil {
 		common.ResponseFailed(c, http.StatusBadRequest, err)
@@ -80,15 +81,22 @@ func (u *UserController) Get(c *gin.Context) {
 	common.ResponseSuccess(c, user)
 }
 
-// @Summary user 列表
-// @Description 获取 user 列表并保存
-// Produce json
+// @Summary List user | 用户列表
+// @Description 获取用户列表并存储
+// @Produce json
 // @Tags user
 // @Security JWT
 // @Success 200 {object} common.Response{data=model.Users}
 // @Router /api/v1/users [get]
 func (u *UserController) List(c *gin.Context) {
-
+	common.TraceStep(c, "start list user")
+	users, err := u.userService.List()
+	if err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	common.TraceStep(c, "list user done")
+	common.ResponseSuccess(c, users)
 }
 
 func (u *UserController) Update(c *gin.Context) {

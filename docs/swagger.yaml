@@ -51,7 +51,9 @@ info:
 paths:
   /api/v1/users:
     get:
-      description: 获取 user 列表并保存
+      description: 获取用户列表并存储
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
@@ -66,7 +68,7 @@ paths:
               type: object
       security:
       - JWT: []
-      summary: user 列表
+      summary: List user | 用户列表
       tags:
       - user
     post:
@@ -94,7 +96,7 @@ paths:
               type: object
       security:
       - JWT: []
-      summary: 创建 user
+      summary: Create user | 创建用户
       tags:
       - user
   /api/v1/users/{id}:
@@ -120,7 +122,7 @@ paths:
               type: object
       security:
       - JWT: []
-      summary: Get user / 获取单个用户
+      summary: Get user | 获取单个用户
       tags:
       - user
   /index:

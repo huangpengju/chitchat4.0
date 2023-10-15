@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"strconv"
 
 	"chitchat4.0/pkg/database"
@@ -34,58 +33,44 @@ func newUserRepository(db *gorm.DB, rdb *database.RedisDB) UserRepository {
 }
 
 // 下面是 userRepository 结构体实现 UserRepository 接口的全部方法
-//
 // List 是使用 *userRepository 接收器定义的方法，
-// 作用：实现了 UserRepository 仓库接口的 User 方法
+// 作用：实现了 UserRepository 仓库接口的 User 方法，用于获取用户列表
 func (u *userRepository) List() (model.Users, error) {
+	// 创建一个空的users
 	users := make(model.Users, 0)
-	// if err := u.db.Preload(model.UserAuthInfoAssociation).Preload(model.GroupAssociation).Preload("Roles").Order("name").Find(&users).Error; err != nil {
-	// 	return nil, err
-	// }
+	if err := u.db.Order("id").Find(&users).Error; err != nil {
+		return nil, err
+	}
 	return users, nil
 }
 
 // Create 实现 user 插入数据到数据库，
 // 是使用 *userRepository 接收器定义的方法，
-// 作用：实现了 user 仓库接口的 Create 方法
+// 作用：实现了 user 仓库接口的 Create 方法，用于创建用户
 func (u *userRepository) Create(user *model.User) (*model.User, error) {
 	if err := u.db.Select(userCreateField).Create(user).Error; err != nil {
 		return nil, err
 	}
 
-	// 缓存用户
+	// 缓存用户信息
 	// u.setCacheUser(user)
-	fmt.Println("当前user=", user)
 	if err := u.setCacheUser(user); err != nil {
-		logrus.Errorf("redis 无法设置用户：%v", err)
+		logrus.Errorf("redis 无法设置用户缓存：%v", err)
 	}
-
-	fmt.Println("读取缓存")
-	user1 := new(model.User)
-	key := user.CacheKey()
-	field := strconv.Itoa(int(user.ID))
-	if err := u.rdb.HGet(key, field, user1); err == nil {
-		fmt.Println("key=", key)
-		fmt.Println("field=", field)
-		fmt.Println("读取缓存中")
-
-		fmt.Println(user1)
-
-	}
-	fmt.Println("读取缓存结束")
-
 	return user, nil
 }
 
+// GetUserByID 通过ID获取用户
 func (u *userRepository) GetUserByID(id uint) (*model.User, error) {
-
+	// 创建一个空的user
 	user := new(model.User)
-
+	// Qmit 查询时省略password
 	if err := u.db.Omit("Password").First(user, id).Error; err != nil {
 		return nil, err
 	}
+	// 设置用户的redis缓存
 	if err := u.setCacheUser(user); err != nil {
-		logrus.Errorf("无法设置用户：%v", err)
+		logrus.Errorf("获取单个用户后无法设置用户缓存：%v", err)
 	}
 	return user, nil
 }

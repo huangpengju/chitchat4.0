@@ -30,11 +30,14 @@ const docTemplate = `{
                         "JWT": []
                     }
                 ],
-                "description": "获取 user 列表并保存",
+                "description": "获取用户列表并存储",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "user"
                 ],
-                "summary": "user 列表",
+                "summary": "List user | 用户列表",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -75,7 +78,7 @@ const docTemplate = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "创建 user",
+                "summary": "Create user | 创建用户",
                 "parameters": [
                     {
                         "description": "user 信息",
@@ -123,7 +126,7 @@ const docTemplate = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "Get user / 获取单个用户",
+                "summary": "Get user | 获取单个用户",
                 "parameters": [
                     {
                         "type": "integer",

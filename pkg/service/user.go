@@ -26,14 +26,13 @@ func NewUserService(userRepository repository.UserRepository) UserService {
 	}
 }
 
-// List 用户列表服务
+// List 实现获取用户列表服务
 func (u *userService) List() (model.Users, error) {
-	users := make(model.Users, 0)
-
-	return users, nil
+	// 调用user仓库，完成具体细节
+	return u.userRepository.List()
 }
 
-// Create 创建 user 的服务
+// Create 实现 Create user 的服务
 func (u *userService) Create(user *model.User) (*model.User, error) {
 	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -43,8 +42,9 @@ func (u *userService) Create(user *model.User) (*model.User, error) {
 	return u.userRepository.Create(user)
 }
 
-// Get 获取用户服务
+// Get 用户服务（获取单个用户）
 func (u *userService) Get(id string) (*model.User, error) {
+	//
 	return u.getUserByID(id)
 }
 
@@ -72,10 +72,12 @@ func (u *userService) Default(user *model.User) {
 	}
 }
 
+// getUserByID 通过ID获取用户的服务，接收用户id后调用user仓库
 func (u *userService) getUserByID(id string) (*model.User, error) {
 	uid, err := strconv.Atoi(id)
 	if err != nil {
 		return nil, err
 	}
+	// 在仓库中实现具体的用户查询操作
 	return u.userRepository.GetUserByID(uint(uid))
 }
