@@ -75,6 +75,8 @@ func (an *AuthController) Login(c *gin.Context) {
 
 		// 第三方登录
 		authToken, err := provider.GetToken(auser.AuthCode)
+	} else {
+		// 账户密码登录
 	}
 }
 
