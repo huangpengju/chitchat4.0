@@ -19,6 +19,15 @@ definitions:
       password:
         type: string
     type: object
+  model.UpdatedUser:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
   model.User:
     properties:
       avatar:
@@ -49,6 +58,33 @@ info:
   title: ChitChat API
   version: "4.0"
 paths:
+  /api/v1/auth/user:
+    post:
+      consumes:
+      - application/json
+      description: Create user and storage
+      parameters:
+      - description: user info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreatedUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.User'
+              type: object
+      summary: Register user | 注册用户
+      tags:
+      - auth
   /api/v1/users:
     get:
       description: 获取用户列表并存储
@@ -123,6 +159,39 @@ paths:
       security:
       - JWT: []
       summary: Get user | 获取单个用户
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: 修改用户信息并保存
+      parameters:
+      - description: user info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdatedUser'
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.User'
+              type: object
+      security:
+      - JWT: []
+      summary: Update user | 修改用户信息
       tags:
       - user
   /index:

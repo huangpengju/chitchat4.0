@@ -7,19 +7,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GetUser 判断用户
+// SetUser 在 Context 中设置 user
+func SetUser(c *gin.Context, user *model.User) {
+	if c == nil || user == nil {
+		return
+	}
+	c.Set(UserContextKey, user)
+}
+
+// GetUser 判断 Context 中是否有 user
 func GetUser(c *gin.Context) *model.User {
 	if c == nil {
 		return nil
 	}
+	// c.Get 返回给定键的值和true,不存在返回nil和false
+	// UserContextKey 表示 user
 	val, ok := c.Get(UserContextKey)
 	if !ok {
 		return nil
 	}
+
+	// val 进行类型断言
 	user, ok := val.(*model.User)
 	if !ok {
 		return nil
 	}
+
 	return user
 }
 

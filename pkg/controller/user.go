@@ -2,12 +2,14 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"chitchat4.0/pkg/common"
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/service"
 	"chitchat4.0/pkg/utils/trace"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 // UserController 用户控制器，
@@ -59,6 +61,7 @@ func (u *UserController) Create(c *gin.Context) {
 	user, err := u.userService.Create(user)
 	if err != nil {
 		common.ResponseFailed(c, http.StatusInternalServerError, err)
+		// return  需要确认是否添加
 	}
 	common.ResponseSuccess(c, user)
 }
@@ -99,8 +102,40 @@ func (u *UserController) List(c *gin.Context) {
 	common.ResponseSuccess(c, users)
 }
 
+// @Summary Update user | 修改用户信息
+// @Description 修改用户信息并保存
+// @Accept json
+// @Produce json
+// @Tags user
+// @Security JWT
+// @Param user body model.UpdatedUser true "user info"
+// @Param id path  int true "user id"
+// @Success 200 {object} common.Response{data=model.User}
+// @Router /api/v1/users/{id} [put]
 func (u *UserController) Update(c *gin.Context) {
+	// GetUser
+	user := common.GetUser(c)
+	// 判断用户是否存在，以及是不是有修改权限
+	if user == nil || (strconv.Itoa(int(user.ID)) != c.Param("id")) {
+		common.ResponseFailed(c, http.StatusForbidden, nil)
+		return
+	}
+	new := new(model.UpdatedUser)
+	if err := c.BindJSON(new); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	logrus.Infof("get update user: %#v", new.Name)
 
+	common.TraceStep(c, "start update user", trace.Field{Key: "user", Value: new.Name})
+	defer common.TraceStep(c, "update user done", trace.Field{Key: "user", Value: new.Name})
+
+	user, err := u.userService.Update(c.Param("id"), new.GetUser())
+	if err != nil {
+		common.ResponseFailed(c, http.StatusInternalServerError, err)
+		return
+	}
+	common.ResponseSuccess(c, user)
 }
 
 func (u *UserController) Delete(c *gin.Context) {
@@ -111,7 +146,7 @@ func (u *UserController) RegisterRoute(api *gin.RouterGroup) {
 	api.GET("/users", u.List)
 	api.POST("/users", u.Create)
 	api.GET("/users/:id", u.Get)
-	// api.PUT("/users:id", u.Update)
+	api.PUT("/users/:id", u.Update)
 	// api.DELETE("/users/:id", u.Delete)
 }
 

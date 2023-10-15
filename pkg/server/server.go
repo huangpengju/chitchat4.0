@@ -8,6 +8,7 @@ import (
 
 	docs "chitchat4.0/docs"
 
+	"chitchat4.0/pkg/authentication"
 	"chitchat4.0/pkg/common"
 	"chitchat4.0/pkg/config"
 	"chitchat4.0/pkg/controller"
@@ -54,14 +55,16 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	}
 
 	userService := service.NewUserService(repository.User())
+	jwtService := authentication.NewJWTService(conf.Server.JWTSecret)
 	tagService := service.NewTagService(repository.Tag())
 	hotSearchService := service.NewHotSearchService(repository.HotSearch())
 
 	userController := controller.NewUserController(userService)
+	authController := controller.NewAuthController(userService, jwtService)
 	tagController := controller.NewTagController(tagService)
 	hotSearchController := controller.NewHotSearchController(hotSearchService)
 
-	controllers := []controller.Controller{userController, tagController, hotSearchController}
+	controllers := []controller.Controller{userController, authController, tagController, hotSearchController}
 
 	gin.SetMode(conf.Server.ENV) // 设置应用的模式(debug|release)
 
@@ -74,9 +77,9 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 
 		middleware.RequestInfoMiddleware(&request.RequestInfoFactory{APIPrefixes: set.NewString("api")}),
 
-		middleware.LogMiddleware(logger, "/"), // 日志中间件
-
-		middleware.TraceMiddleware(), // 追踪中间件
+		middleware.LogMiddleware(logger, "/"),                              // 日志中间件
+		middleware.AuthenticationMiddleware(jwtService, repository.User()), // JWT 中间件
+		middleware.TraceMiddleware(),                                       // 追踪中间件
 	)
 
 	// 返回一个服务

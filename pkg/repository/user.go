@@ -60,7 +60,16 @@ func (u *userRepository) Create(user *model.User) (*model.User, error) {
 	return user, nil
 }
 
-// GetUserByID 通过ID获取用户
+// Update 通过id修改用户，实现了修改用户的服务
+func (u *userRepository) Update(user *model.User) (*model.User, error) {
+	if err := u.db.Model(&model.User{}).Where("id = ?", user.ID).Updates(user).Error; err != nil {
+		return nil, err
+	}
+	u.rdb.HDel(user.CacheKey(), strconv.Itoa(int(user.ID)))
+	return user, nil
+}
+
+// GetUserByID 通过ID获取用户，实现获取用户的服务
 func (u *userRepository) GetUserByID(id uint) (*model.User, error) {
 	// 创建一个空的user
 	user := new(model.User)

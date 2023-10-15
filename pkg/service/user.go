@@ -32,6 +32,12 @@ func (u *userService) List() (model.Users, error) {
 	return u.userRepository.List()
 }
 
+// Get 用户服务（获取单个用户）
+func (u *userService) Get(id string) (*model.User, error) {
+	//
+	return u.getUserByID(id)
+}
+
 // Create 实现 Create user 的服务
 func (u *userService) Create(user *model.User) (*model.User, error) {
 	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -42,10 +48,25 @@ func (u *userService) Create(user *model.User) (*model.User, error) {
 	return u.userRepository.Create(user)
 }
 
-// Get 用户服务（获取单个用户）
-func (u *userService) Get(id string) (*model.User, error) {
-	//
-	return u.getUserByID(id)
+// Update 实现 Update user 的服务
+func (u *userService) Update(id string, new *model.User) (*model.User, error) {
+	old, err := u.getUserByID(id)
+	if err != nil {
+		return nil, err
+	}
+	if new.ID != 0 && old.ID != new.ID {
+		return nil, fmt.Errorf("update user id %s not match（不匹配）", id)
+	}
+	new.ID = old.ID
+
+	if len(new.Password) > 0 {
+		passwrd, err := bcrypt.GenerateFromPassword([]byte(new.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return nil, err
+		}
+		new.Password = string(passwrd)
+	}
+	return u.userRepository.Update(new)
 }
 
 // Validate 验证用户数据

@@ -62,3 +62,11 @@ func (rdb *RedisDB) HGet(key, field string, obj interface{}) error {
 
 	return rdb.Client.HGet(context.Background(), key, field).Scan(obj)
 }
+
+// HDel 删除redis缓存
+func (rdb *RedisDB) HDel(key string, fields ...string) error {
+	if !rdb.enable {
+		return nil
+	}
+	return rdb.Client.HDel(context.Background(), key, fields...).Err()
+}

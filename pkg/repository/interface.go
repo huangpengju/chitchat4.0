@@ -25,6 +25,7 @@ type UserRepository interface {
 	GetUserByID(uint) (*model.User, error)
 	List() (model.Users, error)
 	Create(*model.User) (*model.User, error)
+	Update(*model.User) (*model.User, error)
 	Migrate() error
 }
 

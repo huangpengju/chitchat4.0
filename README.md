@@ -69,6 +69,16 @@ go get github.com/gin-contrib/cors
 go get github.com/bombsimon/logrusr/v2
 ```
 
+### 安装 jwt
+```
+go get github.com/golang-jwt/jwt/v4
+```
+### 安装 oauth2
+```
+go get golang.org/x/oauth2
+```
+
+
 
 ### ini
 ```

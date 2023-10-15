@@ -25,11 +25,13 @@ func (u *User) CacheKey() string {
 	return u.TableName() + ":id"
 }
 
+// 设置 Redis时使用
 // MarshalBinary 用于把 user 结构体实现 MarshalBinary 方法，MarshalBinary
 func (u *User) MarshalBinary() ([]byte, error) {
 	return json.Marshal(u)
 }
 
+// 获取 Redis时使用
 // UnmarshalBinary
 func (u *User) UnmarshalBinary(data []byte) error {
 	return json.Unmarshal(data, u)
@@ -55,4 +57,29 @@ func (u *CreatedUser) GetUser() *User {
 		Email:    u.Email,
 		Avatar:   u.Avatar,
 	}
+}
+
+// UpdatedUser 结构用于绑定前端传入的参数
+type UpdatedUser struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+}
+
+// GetUser 返回一个 User，使用UpdatedUser中的数据
+func (u *UpdatedUser) GetUser() *User {
+	return &User{
+		Name:     u.Name,
+		Password: u.Password,
+		Email:    u.Email,
+	}
+}
+
+// AuthUser 授权User(登录)
+type AuthUser struct {
+	Name      string `json:"name"`
+	Password  string `json:"password"`
+	SetCookie bool   `json:"setCookie"`
+	AuthType  string `json:"authType"`
+	AuthCode  string `json:"authCode"`
 }
