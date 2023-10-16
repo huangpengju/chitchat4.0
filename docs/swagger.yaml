@@ -8,6 +8,19 @@ definitions:
       msg:
         type: string
     type: object
+  model.AuthUser:
+    properties:
+      authCode:
+        type: string
+      authType:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      setCookie:
+        type: boolean
+    type: object
   model.CreatedUser:
     properties:
       avatar:
@@ -17,6 +30,13 @@ definitions:
       name:
         type: string
       password:
+        type: string
+    type: object
+  model.JWTToken:
+    properties:
+      describe:
+        type: string
+      token:
         type: string
     type: object
   model.UpdatedUser:
@@ -58,6 +78,33 @@ info:
   title: ChitChat API
   version: "4.0"
 paths:
+  /api/v1/auth/token:
+    post:
+      consumes:
+      - application/json
+      description: user login | 用户登录
+      parameters:
+      - description: auth user info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.AuthUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.JWTToken'
+              type: object
+      summary: Login | 登录
+      tags:
+      - auth
   /api/v1/auth/user:
     post:
       consumes:

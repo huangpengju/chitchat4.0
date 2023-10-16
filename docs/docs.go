@@ -23,6 +23,52 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/auth/token": {
+            "post": {
+                "description": "user login | 用户登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login | 登录",
+                "parameters": [
+                    {
+                        "description": "auth user info",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.AuthUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.JWTToken"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/auth/user": {
             "post": {
                 "description": "Create user and storage",
@@ -287,6 +333,26 @@ const docTemplate = `{
                 }
             }
         },
+        "model.AuthUser": {
+            "type": "object",
+            "properties": {
+                "authCode": {
+                    "type": "string"
+                },
+                "authType": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "setCookie": {
+                    "type": "boolean"
+                }
+            }
+        },
         "model.CreatedUser": {
             "type": "object",
             "properties": {
@@ -300,6 +366,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.JWTToken": {
+            "type": "object",
+            "properties": {
+                "describe": {
+                    "type": "string"
+                },
+                "token": {
                     "type": "string"
                 }
             }

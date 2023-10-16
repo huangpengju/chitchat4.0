@@ -22,11 +22,12 @@ func NewResponse(c *gin.Context, code int, data interface{}, msg string) {
 	})
 }
 
+// ResponseSuccess 成功时做的响应
 func ResponseSuccess(c *gin.Context, data interface{}) {
 	NewResponse(c, http.StatusOK, data, "success")
 }
 
-// ResponseFailed 响应失败时做相关处理
+// ResponseFailed 失败时做相关响应
 func ResponseFailed(c *gin.Context, code int, err error) {
 	if code == 0 {
 		code = http.StatusInternalServerError

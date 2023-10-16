@@ -93,6 +93,23 @@ func (u *userService) Default(user *model.User) {
 	}
 }
 
+// Auth 通过接收到的参数实现登录验证的服务
+func (u *userService) Auth(auser *model.AuthUser) (*model.User, error) {
+	if auser == nil || auser.Name == "" || auser.Password == "" {
+		return nil, fmt.Errorf("name or password is empty")
+	}
+	// 通过name查询user
+	user, err := u.userRepository.GetUserByName(auser.Name)
+	if err != nil {
+		return nil, err
+	}
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(auser.Password)); err != nil {
+		return nil, err
+	}
+	user.Password = ""
+	return user, nil
+}
+
 // getUserByID 通过ID获取用户的服务，接收用户id后调用user仓库
 func (u *userService) getUserByID(id string) (*model.User, error) {
 	uid, err := strconv.Atoi(id)

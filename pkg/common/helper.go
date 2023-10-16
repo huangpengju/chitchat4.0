@@ -17,7 +17,7 @@ func WrapFunc(f interface{}, args ...interface{}) gin.HandlerFunc {
 
 	outNum := fn.Type().NumOut()
 	if outNum == 0 {
-		panic(fmt.Sprintf("函数输出参数无效：%v，至少有一个，但是得到了：%d", fn.Type()))
+		panic(fmt.Sprintf("函数输出参数无效：%v，至少有一个，但是得到了：%d", fn.Type(), outNum))
 	}
 	inputs := make([]reflect.Value, len(args))
 	for k, in := range args {

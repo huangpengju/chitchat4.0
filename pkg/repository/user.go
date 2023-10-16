@@ -84,6 +84,15 @@ func (u *userRepository) GetUserByID(id uint) (*model.User, error) {
 	return user, nil
 }
 
+// GetUserByName 通过name获取用户，实现获取用户的服务
+func (u *userRepository) GetUserByName(name string) (*model.User, error) {
+	user := new(model.User)
+	if err := u.db.Where("name=?", name).First(user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 // setCacheUser 缓存 user
 func (u *userRepository) setCacheUser(user *model.User) error {
 	if user == nil {

@@ -13,4 +13,5 @@ type WeChatAuth struct {
 
 func (auth *WeChatAuth) GetToken(code string) (*oauth2.Token, error) {
 
+	return nil, nil
 }
