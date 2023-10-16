@@ -36,6 +36,7 @@ func NewJWTService(secret string) *JWTService {
 	}
 }
 
+// CreateToken 创建 Token
 func (s *JWTService) CreateToken(user *model.User) (string, error) {
 	if user == nil {
 		return "", fmt.Errorf("empty user")

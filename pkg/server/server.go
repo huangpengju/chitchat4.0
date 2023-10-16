@@ -78,7 +78,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 		middleware.RequestInfoMiddleware(&request.RequestInfoFactory{APIPrefixes: set.NewString("api")}),
 
 		middleware.LogMiddleware(logger, "/"),                              // 日志中间件
-		middleware.AuthenticationMiddleware(jwtService, repository.User()), // JWT 中间件
+		middleware.AuthenticationMiddleware(jwtService, repository.User()), // JWT 中间件（jwtService服务和user仓库）
 		middleware.TraceMiddleware(),                                       // 追踪中间件
 	)
 

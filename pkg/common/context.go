@@ -1,6 +1,8 @@
 package common
 
 import (
+	"fmt"
+
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/utils/request"
 	"chitchat4.0/pkg/utils/trace"
@@ -12,6 +14,8 @@ func SetUser(c *gin.Context, user *model.User) {
 	if c == nil || user == nil {
 		return
 	}
+	fmt.Println("user（中间件设置）===", user)
+
 	c.Set(UserContextKey, user)
 }
 

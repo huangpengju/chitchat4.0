@@ -13,6 +13,7 @@ import (
 
 func AuthenticationMiddleware(jwtService *authentication.JWTService, userRepo repository.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
+
 		// 获取 token
 		token, _ := getTokenFromAuthorizationHeader(c)
 		if token == "" {
@@ -33,6 +34,7 @@ func AuthenticationMiddleware(jwtService *authentication.JWTService, userRepo re
 			common.SetUser(c, user)
 		}
 		c.Next()
+
 	}
 }
 

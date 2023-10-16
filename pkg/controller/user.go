@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -115,6 +116,7 @@ func (u *UserController) List(c *gin.Context) {
 func (u *UserController) Update(c *gin.Context) {
 	// GetUser
 	user := common.GetUser(c)
+	fmt.Println("user（修改处）===", user)
 	// 判断用户是否存在，以及是不是有修改权限
 	if user == nil || (strconv.Itoa(int(user.ID)) != c.Param("id")) {
 		common.ResponseFailed(c, http.StatusForbidden, nil)
