@@ -98,11 +98,12 @@ func (u *userService) Auth(auser *model.AuthUser) (*model.User, error) {
 	if auser == nil || auser.Name == "" || auser.Password == "" {
 		return nil, fmt.Errorf("name or password is empty")
 	}
-	// 通过name查询user
+	// 通过name查询user是否存在
 	user, err := u.userRepository.GetUserByName(auser.Name)
 	if err != nil {
 		return nil, err
 	}
+	// 数据库用户密码和登录用户密码进行对比
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(auser.Password)); err != nil {
 		return nil, err
 	}

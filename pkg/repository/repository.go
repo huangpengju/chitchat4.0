@@ -59,11 +59,13 @@ func (r *repository) HotSearch() HotSearchRepository {
 
 // Ping 是使用 *repository 接收器定义的方法，
 // 作用：实现了 Repository 仓库接口的 Ping 方法
+// 查看数据库的连接状态
 func (r *repository) Ping(ctx context.Context) error {
 	db, err := r.db.DB()
 	if err != nil {
 		return err
 	}
+	// PingContext 验证到 Postgres 数据库的连接是否仍然存在，并在必要时建立连接
 	if err = db.PingContext(ctx); err != nil {
 		return err
 	}
@@ -71,6 +73,7 @@ func (r *repository) Ping(ctx context.Context) error {
 	if r.rdb == nil {
 		return nil
 	}
+	// 查看 redis 的连接状态
 	if _, err := r.rdb.Ping(ctx).Result(); err != nil {
 		return err
 	}

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"chitchat4.0/pkg/authentication"
@@ -85,7 +84,7 @@ func (ac *AuthController) Login(c *gin.Context) {
 	// 第三方登录
 	// authToken, err := provider.GetToken(auser.AuthCode)
 	// } else {
-	// 账户密码登录
+	// 使用登录用户的name查询用户是否存在，然后对比登录用户密码和数据库用户密码
 	user, err = ac.userService.Auth(auser)
 	// }
 	if err != nil {
@@ -98,7 +97,8 @@ func (ac *AuthController) Login(c *gin.Context) {
 		common.ResponseFailed(c, http.StatusInternalServerError, err)
 		return
 	}
-	userJson, err := json.Marshal(user)
+	// json 序列化
+	userJson, err := json.Marshal(user) // userJson 包括除了密码之外的用户信息
 	if err != nil {
 		common.ResponseFailed(c, http.StatusInternalServerError, err)
 		return
@@ -113,24 +113,9 @@ func (ac *AuthController) Login(c *gin.Context) {
 	// 第六个参数是 secure ，当 secure 值为 true 时，cookie 在 HTTP 中是无效，在 HTTPS 中 才有效 ;
 	// 第七个参数 httpOnly，表示 cookie 是否可以通过 js代码进行操作，为true时不能被js获取,是微软对 COOKIE 做的扩展。如果在 COOKIE 中设置了“httpOnly”属性， 则通过程序（JS 脚本、applet 等）将无法读取到 COOKIE 信息，防止 XSS 攻击产生;
 	if auser.SetCookie {
-		// c.SetSameSite(http.SameSiteDefaultMode)
-		// fmt.Println("AA=", http.SameSiteDefaultMode)
-		// c.SetSameSite(http.SameSiteLaxMode)
-		// fmt.Println("BB=", http.SameSiteLaxMode)
-		// c.SetSameSite(http.SameSiteStrictMode)
-		// fmt.Println("CC=", http.SameSiteStrictMode)
-		// c.SetSameSite(http.SameSiteNoneMode)
-		// fmt.Println("DD=", http.SameSiteNoneMode)
-
 		c.SetCookie(common.CookieTokenName, token, 3600*24, "/", "", true, true)
 		c.SetCookie(common.CookieLoginUser, string(userJson), 36000*24, "/", "", true, false)
 	}
-	a, err := c.Cookie("token")
-	fmt.Println("token===", a)
-	fmt.Println("err===", err)
-	b, err := c.Cookie(common.CookieLoginUser)
-	fmt.Println("loginUser===", b)
-	fmt.Println("err===", err)
 	common.ResponseSuccess(c, model.JWTToken{
 		Token:    token,
 		Describe: "set token in Authorization Header,[Authorization:Bearer {token}]",

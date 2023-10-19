@@ -27,6 +27,7 @@ func WrapFunc(f interface{}, args ...interface{}) gin.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				logrus.Warnf("panic：%v", err)
+				// 500 内部服务器错误
 				ResponseFailed(c, http.StatusInternalServerError, fmt.Errorf("%v", err))
 			}
 		}()
@@ -35,6 +36,7 @@ func WrapFunc(f interface{}, args ...interface{}) gin.HandlerFunc {
 		if len(outputs) > 1 {
 			err, ok := outputs[len(outputs)-1].Interface().(error)
 			if ok && err != nil {
+				// 500 内部服务器错误
 				ResponseFailed(c, http.StatusInternalServerError, err)
 				return
 			}

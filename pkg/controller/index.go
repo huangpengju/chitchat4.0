@@ -21,9 +21,9 @@ func Index(c *gin.Context) {
 			<h1>Hello 黄鹏举</h1>
 			<ul>
 				<li><a href="/swagger/index.html">swagger</a></li>
-				<li><a href="/metrics">metrics</a></li>
-				<li><a href="/healthz">healthz</a></li>
-				<li><a href="/">api list</a></li>
+				<li><a href="/metrics">指标</a></li>
+				<li><a href="/healthz">服务器状态</a></li>
+				<li><a href="/">api 列表</a></li>
 			  </ul>
 			<hr>
 			<center>版本/1.0</center>

@@ -119,17 +119,17 @@ func (s *Server) initRouter() {
 
 	root := s.engine
 
-	root.GET("/", common.WrapFunc(s.getRouters))
-	root.GET("/index", controller.Index)
+	root.GET("/", common.WrapFunc(s.getRouters)) // 全部API列表
+	root.GET("/index", controller.Index)         // 查看所有API的页面
 
-	root.GET("/healthz", common.WrapFunc(s.Ping))
-	root.GET("/version", common.WrapFunc(version.Get))
-	root.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	root.GET("/healthz", common.WrapFunc(s.Ping))       // 查看服务器状态（主要是数据库连接状态）
+	root.GET("/version", common.WrapFunc(version.Get))  // 版本
+	root.GET("/metrics", gin.WrapH(promhttp.Handler())) // 指标
 	root.Any("/debug/pprof/*any", gin.WrapH(http.DefaultServeMux))
 
 	if gin.Mode() != gin.ReleaseMode {
 		docs.SwaggerInfo.BasePath = "/"
-		root.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+		root.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler)) // 查看Swagger
 	}
 	api := root.Group("/api/v1")
 	controllers := make([]string, 0, len(s.controllers))
@@ -156,12 +156,14 @@ type ServerStatus struct {
 	DBRepository bool `json:"dbRepository"`
 }
 
+// Ping 查看服务器状态
 func (s *Server) Ping() *ServerStatus {
 	status := &ServerStatus{Ping: true}
 
-	ctx, cannel := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cannel()
+	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+	// defer cannel()
 
+	// ping 验证数据库的连接状态
 	if err := s.repository.Ping(ctx); err == nil {
 		status.DBRepository = true
 	}

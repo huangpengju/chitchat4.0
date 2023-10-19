@@ -68,7 +68,7 @@ func (s *JWTService) ParseToken(tokenString string) (*model.User, error) {
 		return nil, err
 	}
 	claims, ok := token.Claims.(*CustomClaims)
-	if !ok || token.Valid {
+	if !ok || !token.Valid {
 		return nil, fmt.Errorf("invalid token")
 	}
 

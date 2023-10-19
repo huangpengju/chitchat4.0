@@ -39,7 +39,7 @@ func (t *TagController) RegisterRoute(api *gin.RouterGroup) {
 	api.GET("/tags", t.List)
 	api.POST("/tags", t.Create)
 	api.GET("/tags/:id", t.Get)
-	api.PUT("/tags:id", t.Update)
+	api.PUT("/tags/:id", t.Update)
 	api.DELETE("/tags/:id", t.Delete)
 }
 
