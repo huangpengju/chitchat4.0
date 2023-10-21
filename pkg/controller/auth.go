@@ -113,8 +113,8 @@ func (ac *AuthController) Login(c *gin.Context) {
 	// 第六个参数是 secure ，当 secure 值为 true 时，cookie 在 HTTP 中是无效，在 HTTPS 中 才有效 ;
 	// 第七个参数 httpOnly，表示 cookie 是否可以通过 js代码进行操作，为true时不能被js获取,是微软对 COOKIE 做的扩展。如果在 COOKIE 中设置了“httpOnly”属性， 则通过程序（JS 脚本、applet 等）将无法读取到 COOKIE 信息，防止 XSS 攻击产生;
 	if auser.SetCookie {
-		c.SetCookie(common.CookieTokenName, token, 3600*24, "/", "", true, true)
-		c.SetCookie(common.CookieLoginUser, string(userJson), 36000*24, "/", "", true, false)
+		c.SetCookie(common.CookieTokenName, token, 3600*24, "/", "localhost", true, true)
+		c.SetCookie(common.CookieLoginUser, string(userJson), 36000*24, "/", "localhost", true, false)
 	}
 	common.ResponseSuccess(c, model.JWTToken{
 		Token:    token,
