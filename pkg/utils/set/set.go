@@ -3,11 +3,12 @@ package set
 import "sort"
 
 type Empty struct{}
-type String map[string]Empty
+type String map[string]Empty // 空的映射
 
 func NewString(items ...string) String {
 	ss := String{}
-	ss.Insert(items...)
+	a := ss.Insert(items...)
+	println("a==", a)
 	return ss
 }
 

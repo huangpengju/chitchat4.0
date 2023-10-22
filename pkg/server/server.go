@@ -75,10 +75,12 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 
 		middleware.CORSMiddleware(), // CORSMiddleware() 加载cors跨域中间件
 
-		middleware.RequestInfoMiddleware(&request.RequestInfoFactory{APIPrefixes: set.NewString("api")}),
+		middleware.RequestInfoMiddleware(&request.RequestInfoFactory{APIPrefixes: set.NewString("api")}), // 请求信息处理中间件
 
-		middleware.LogMiddleware(logger, "/"),                              // 日志中间件
-		middleware.AuthenticationMiddleware(jwtService, repository.User()), // JWT 中间件（jwtService服务和user仓库）
+		middleware.LogMiddleware(logger, "/"), // 日志中间件
+
+		middleware.AuthenticationMiddleware(jwtService, repository.User()), // 身份验证： JWT 中间件（jwtService服务和user仓库）
+		middleware.AuthorizationMiddleware(),                               // 授权
 		middleware.TraceMiddleware(),                                       // 追踪中间件
 	)
 

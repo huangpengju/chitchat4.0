@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// AuthenticationMiddleware 验证Token中间件，同时把 user 存储到 gin的Context中
+// AuthenticationMiddleware 验证Token的中间件，同时把 user 存储到 gin的Context中
 func AuthenticationMiddleware(jwtService *authentication.JWTService, userRepo repository.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 

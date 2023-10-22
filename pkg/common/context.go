@@ -1,8 +1,6 @@
 package common
 
 import (
-	"fmt"
-
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/utils/request"
 	"chitchat4.0/pkg/utils/trace"
@@ -14,8 +12,6 @@ func SetUser(c *gin.Context, user *model.User) {
 	if c == nil || user == nil {
 		return
 	}
-	fmt.Println("user（中间件设置）===", user)
-
 	c.Set(UserContextKey, user)
 }
 
@@ -76,10 +72,28 @@ func TraceStep(c *gin.Context, msg string, fields ...trace.Field) {
 	}
 }
 
+// SetRequestInfo 把请求的消息设置到 Context 的 Keys[requestInfo] 中取
 func SetRequestInfo(c *gin.Context, ri *request.RequestInfo) {
 	if c == nil || ri == nil {
 		return
 	}
 
 	c.Set(RequestInfoContextKey, ri)
+}
+
+// GetRequestInfo 获取 Context 的Keys[requestInfo]中的消息
+func GetRequestInfo(c *gin.Context) *request.RequestInfo {
+	if c == nil {
+		return nil
+	}
+	val, ok := c.Get(RequestInfoContextKey)
+	if !ok {
+		return nil
+	}
+
+	ri, ok := val.(*request.RequestInfo)
+	if !ok {
+		return nil
+	}
+	return ri
 }

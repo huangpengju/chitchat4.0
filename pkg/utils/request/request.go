@@ -28,13 +28,13 @@ type RequestInfoResolver interface {
 type RequestInfo struct {
 	IsResourceRequest bool
 	Path              string
-	Verb              string
+	Verb              string // 请求的方法
 
 	APIPrefix  string
 	APIGroup   string
 	APIVersion string
 	Namespace  string
-	// Resource is the name of the resource being requested.  This is not the kind.  For example: pods
+	// Resource 是被请求的资源的名称.  This is not the kind.  For example: pods
 	Resource    string
 	Subresource string
 	// Name is empty for some verbs, but if the request directly indicates a name (not in body content) then this field is filled in.
