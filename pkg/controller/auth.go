@@ -104,17 +104,18 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 	// 设置cookie
-	// 	c.SetCookie(name, value string, maxAge int, path, domain string, secure, httpOnly bool)
-	// 第一个参数 key;
-	// 第二个参数 value ;
-	// 第三个参数 过期时间.如果只想设置 Cookie 的保存路径而不想设置存活时间，可以在第三个 参数中传递 nil ;
-	// 第四个参数 cookie 的路径 ;
-	// 第五个参数 cookie 的路径 Domain 作用域 本地调试配置成 localhost , 正式上线配置成域名 ;
-	// 第六个参数是 secure ，当 secure 值为 true 时，cookie 在 HTTP 中是无效，在 HTTPS 中 才有效 ;
-	// 第七个参数 httpOnly，表示 cookie 是否可以通过 js代码进行操作，为true时不能被js获取,是微软对 COOKIE 做的扩展。如果在 COOKIE 中设置了“httpOnly”属性， 则通过程序（JS 脚本、applet 等）将无法读取到 COOKIE 信息，防止 XSS 攻击产生;
+	// c.SetCookie(name, value string, maxAge int, path, domain string, secure, httpOnly bool)
+	// name：cookie 的名称（必须）。
+	// value：cookie 的值（必须）。
+	// maxAge：cookie 的过期时间，以秒为单位。如果为负数，则表示会话 cookie（在浏览器关闭之后删除），如果为零，则表示立即删除 cookie（可选，默认值为-1）。
+	// path：cookie 的路径。如果为空字符串，则使用当前请求的 URI 路径作为默认值（可选，默认值为空字符串）。
+	// domain：cookie 的域名。如果为空字符串，则不设置域名（可选，默认值为空字符串）。
+	// secure：指定是否仅通过 HTTPS 连接发送 cookie。如果为 true，则仅通过 HTTPS 连接发送 cookie；否则，使用 HTTP 或 HTTPS 连接都可以发送 cookie（可选，默认值为 false）。
+	// httpOnly：指定 cookie 是否可通过 JavaScript 访问。如果为 true，则无法通过 JavaScript 访问 cookie；否则，可以通过 JavaScript 访问 cookie（可选，默认值为 true）。
+
 	if auser.SetCookie {
-		c.SetCookie(common.CookieTokenName, token, 3600*24, "/", "localhost", true, true)
-		c.SetCookie(common.CookieLoginUser, string(userJson), 36000*24, "/", "localhost", true, false)
+		c.SetCookie(common.CookieTokenName, token, 3600*24, "/", "", true, true)
+		c.SetCookie(common.CookieLoginUser, string(userJson), 3600*24, "/", "", true, false)
 	}
 	common.ResponseSuccess(c, model.JWTToken{
 		Token:    token,
