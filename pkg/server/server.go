@@ -78,7 +78,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 		//  http请求中的信息放到Context
 		middleware.RequestInfoMiddleware(&request.RequestInfoFactory{APIPrefixes: set.NewString("api")}), // 请求信息处理中间件
 
-		middleware.LogMiddleware(logger, "/"), // 日志中间件
+		middleware.LogMiddleware(logger, "/"), // 日志中间件（把http请求中的信息写入到日志中）
 
 		middleware.AuthenticationMiddleware(jwtService, repository.User()), // 身份验证： JWT 中间件（jwtService服务和user仓库）
 		middleware.AuthorizationMiddleware(),                               // 授权
