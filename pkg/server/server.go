@@ -75,6 +75,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 
 		middleware.CORSMiddleware(), // CORSMiddleware() 加载cors跨域中间件
 
+		//  http请求中的信息放到Context
 		middleware.RequestInfoMiddleware(&request.RequestInfoFactory{APIPrefixes: set.NewString("api")}), // 请求信息处理中间件
 
 		middleware.LogMiddleware(logger, "/"), // 日志中间件

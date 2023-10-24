@@ -18,11 +18,12 @@ var (
 // LogMiddleware 日志中间件
 func LogMiddleware(logger *logrus.Logger, pathPrefix ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		path := c.Request.URL.Path // 访问的URL(用于客户端请求)路径。 比如：/api/v1/users/7
-		logged := len(pathPrefix) == 0
-		for _, prefix := range pathPrefix {
-			if strings.HasPrefix(path, prefix) {
-				logged = true
+		path := c.Request.URL.Path     // 存储在Context中的http请求信息。访问的URL(用于客户端请求)路径。 比如：/api/v1/users/7
+		logged := len(pathPrefix) == 0 // len()函数返回的是字符串"/"的长度 1，logged = false
+
+		for _, prefix := range pathPrefix { // range 返回字符串"/" 的索引(0)和值(/)
+			if strings.HasPrefix(path, prefix) { // 检查字符path(路径)，是否以prefix(/)开头
+				logged = true // 重新赋值
 				break
 			}
 		}
@@ -50,6 +51,7 @@ func LogMiddleware(logger *logrus.Logger, pathPrefix ...string) gin.HandlerFunc 
 			if len(c.Errors) > 0 {
 				entry.Error(c.Errors.ByType(gin.ErrorTypePrivate).String())
 			} else {
+				// 方法 路径 状态码 传输时间
 				msg := fmt.Sprintf("[%s %s] %d %v", c.Request.Method, c.Request.URL, statusCode, latency)
 				if statusCode >= http.StatusInternalServerError {
 					entry.Error(msg)

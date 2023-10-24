@@ -21,42 +21,47 @@ const (
 	DeleteOperation = "delete"
 )
 
+// RequestInfoResolver 请求信息解析接口
 type RequestInfoResolver interface {
+	// NewRequestInfo 返回http请求中的信息。
 	NewRequestInfo(req *http.Request) (*RequestInfo, error)
 }
 
+// RequestInfo 请求信息结构体
 type RequestInfo struct {
 	IsResourceRequest bool   // 是否资源请求
 	Path              string // 请求的URL
 	Verb              string // 请求的方法
 
 	APIPrefix  string // API 前缀（URL前缀）
-	APIGroup   string
-	APIVersion string
-	Namespace  string
+	APIGroup   string // API 分组
+	APIVersion string // API 版本
+	Namespace  string // 命名空间
 	// Resource 是被请求的资源的名称.  This is not the kind.  For example: pods
-	Resource    string
+	Resource    string // 资源
 	Subresource string
 	// Name is empty for some verbs, but if the request directly indicates a name (not in body content) then this field is filled in.
+	// 对于某些动词，Name为空，但如果请求直接指示一个名称(不在正文内容中)，则填充此字段。
 	Name string
 	// Parts are the path parts for the request, always starting with /{resource}/{name}
+	// Parts是请求的路径部分，总是以/{resource}/{name}开头。
 	Parts []string
 }
 
+// RequestInfoFactory 请求信息工厂结构体
 type RequestInfoFactory struct {
+	// API(接口前缀) 比如：map[api:****/***/***]
 	APIPrefixes set.String // APIPrefixes map[string]Empty // 空的字符串映射
 }
 
-// TODO针对swagger文档编写集成测试，以测试RequestInfo并将行为与响应匹配
-// NewRequestInfo返回http请求中的信息。如果error不是nil，RequestInfo将保留故障前已知的最佳信息
-// 它处理资源和非资源请求，并为每个请求填充所有相关信息。
-// 有效输入：
-// 资源路径
 // TODO write an integration test against the swagger doc to test the RequestInfo and match up behavior to responses
+// TODO针对swagger文档编写集成测试，以测试RequestInfo并将行为与响应匹配
 // NewRequestInfo returns the information from the http request.  If error is not nil, RequestInfo holds the information as best it is known before the failure
+// NewRequestInfo返回http请求中的信息。如果error不是nil，RequestInfo将保留故障前已知的最佳信息
 // It handles both resource and non-resource requests and fills in all the pertinent information for each.
-// Valid Inputs:
-// Resource paths
+// 它处理资源和非资源请求，并为每个请求填充所有相关信息。
+// Valid Inputs(有效输入):
+// Resource paths (资源路径)
 // /apis/{api-group}/{version}/namespaces
 // /api/{version}/namespaces
 // /api/{version}/namespaces/{namespace}
@@ -137,13 +142,14 @@ func (r *RequestInfoFactory) NewRequestInfo(req *http.Request) (*RequestInfo, er
 			}
 		}
 	} else {
-		requestInfo.Namespace = NamespaceRoot
+		requestInfo.Namespace = NamespaceRoot // 根命名空间
 	}
 
 	// parsing successful, so we now know the proper value for .Parts
+	// 解析成功了，所以我们现在知道了.Parts的正确值
 	requestInfo.Parts = currentParts
 
-	// parts look like: resource/resourceName/subresource/other/stuff/we/don't/interpret
+	// parts look like（部分看起来像）: resource/resourceName/subresource/other/stuff/we/don't/interpret
 	switch {
 	case len(requestInfo.Parts) >= 3:
 		requestInfo.Subresource = requestInfo.Parts[2]
