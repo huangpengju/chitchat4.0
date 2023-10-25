@@ -29,6 +29,7 @@ func Authorize(user *model.User, ri *request.RequestInfo) (bool, error) {
 
 	var err error
 	if user.ID != 0 {
+		// store 是 repository
 		_, err = store.User().GetUserByID(user.ID)
 	}
 
@@ -57,6 +58,7 @@ func Authorize(user *model.User, ri *request.RequestInfo) (bool, error) {
 	// 		}
 	// 	}
 	// }
-
 	return true, nil
+
+	// return false, nil
 }

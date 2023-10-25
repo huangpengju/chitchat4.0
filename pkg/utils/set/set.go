@@ -7,8 +7,7 @@ type String map[string]Empty // 空的映射
 
 func NewString(items ...string) String {
 	ss := String{}
-	a := ss.Insert(items...)
-	println("a==", a)
+	ss.Insert(items...)
 	return ss
 }
 

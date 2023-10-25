@@ -9,7 +9,7 @@ import (
 	"github.com/go-logr/logr"
 )
 
-// Field 是一个键值对，它提供有关跟踪的其他详细信息。
+// Field 结构体组合出一个键值对，它提供有关跟踪的其他详细信息。
 type Field struct {
 	Key   string
 	Value interface{}
@@ -66,8 +66,7 @@ func (f Field) format() string {
 	return fmt.Sprintf("%s:%v", f.Key, f.Value)
 }
 
-// Trace 跟踪一组“步骤”，并允许我们记录特定的
-// 如果花费的时间超过其在总允许时间中所占的份额，则执行步骤
+// Trace跟踪一组“步骤”，并允许我们记录一个特定的步骤，如果它花费的时间超过了它在总允许时间中的份额
 type Trace struct {
 	name        string
 	fields      []Field
@@ -175,7 +174,7 @@ func (t *Trace) durationIsWithinThreshold() bool {
 	return t.threshold == nil || *t.threshold == 0 || t.endTime.Sub(t.startTime) >= *t.threshold
 }
 
-// New将创建具有指定名称的Trace。名称标识要跟踪的操作。这个
+// New将创建具有指定名称的Trace。name要跟踪的操作。这个
 // 字段添加键值对，以提供有关跟踪的其他详细信息，例如操作输入。
 func New(name string, logger logr.Logger, fields ...Field) *Trace {
 	return &Trace{name: name, startTime: time.Now(), fields: fields, logger: logger}

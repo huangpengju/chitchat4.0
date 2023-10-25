@@ -70,19 +70,28 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 
 	e := gin.New() // 定义一个 gin 引擎 (不带中间件的路由)
 	e.Use(         // 挂载中间件
+		// 限速
 		rateLimitMiddleware,
+
 		gin.Recovery(), // Recovery 返回一个中间件，可以从任何恐慌中恢复
 
+		// 设置运行的请求源、方法、请求头等
 		middleware.CORSMiddleware(), // CORSMiddleware() 加载cors跨域中间件
 
-		//  http请求中的信息放到Context
+		//  当前次http请求中的部分信息放到Context
 		middleware.RequestInfoMiddleware(&request.RequestInfoFactory{APIPrefixes: set.NewString("api")}), // 请求信息处理中间件
 
-		middleware.LogMiddleware(logger, "/"), // 日志中间件（把http请求中的信息写入到日志中）
+		// 把http请求中的部分信息写入到日志中
+		middleware.LogMiddleware(logger, "/"), // 日志中间件
 
+		// 获取Token，解析出Token中的user后加入Context
 		middleware.AuthenticationMiddleware(jwtService, repository.User()), // 身份验证： JWT 中间件（jwtService服务和user仓库）
-		middleware.AuthorizationMiddleware(),                               // 授权
-		middleware.TraceMiddleware(),                                       // 追踪中间件
+
+		// 验证上一步Context中存入的user，以及上上上一步在Context中存入的当前次http请求中的部分信息，
+		middleware.AuthorizationMiddleware(), // 检查当前user的当前次请求是否被允许
+
+		// Trace跟踪一组“步骤”，并允许我们记录一个特定的步骤，如果它花费的时间超过了它在总允许时间中的份额
+		middleware.TraceMiddleware(), // 追踪中间件
 	)
 
 	// 返回一个服务
