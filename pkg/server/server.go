@@ -90,7 +90,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 		// 验证上一步Context中存入的user，以及上上上一步在Context中存入的当前次http请求中的部分信息，
 		middleware.AuthorizationMiddleware(), // 检查当前user的当前次请求是否被允许
 
-		// Trace跟踪一组“步骤”，并允许我们记录一个特定的步骤，如果它花费的时间超过了它在总允许时间中的份额
+		// Trace跟踪一组“步骤”包括：Hander、请求方法、请求路径等，并允许我们记录一个特定的步骤，如果它花费的时间超过了它在总允许时间中的份额
 		middleware.TraceMiddleware(), // 追踪中间件
 	)
 

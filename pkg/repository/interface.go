@@ -8,6 +8,8 @@ import (
 
 type Repository interface {
 	User() UserRepository
+	Group() GroupRepository
+	RBAC() RBACRepository
 	Tag() TagRepository
 	HotSearch() HotSearchRepository
 
@@ -30,6 +32,11 @@ type UserRepository interface {
 	Migrate() error
 }
 
+// 分组
+type GroupRepository interface {
+	Migrate() error
+}
+
 // Tag 标签接口
 type TagRepository interface {
 	List() ([]model.Tag, error)
@@ -41,5 +48,9 @@ type TagRepository interface {
 type HotSearchRepository interface {
 	List() ([]model.HotSearch, error)
 	Create(*model.Tag, *model.HotSearch) (*model.HotSearch, error)
+	Migrate() error
+}
+
+type RBACRepository interface {
 	Migrate() error
 }

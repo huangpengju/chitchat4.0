@@ -68,14 +68,14 @@ func (f Field) format() string {
 
 // Trace跟踪一组“步骤”，并允许我们记录一个特定的步骤，如果它花费的时间超过了它在总允许时间中的份额
 type Trace struct {
-	name        string
-	fields      []Field
+	name        string         // 记录 Handler
+	fields      []Field        // 记录请求的方法和路径
 	threshold   *time.Duration // 临界值
-	startTime   time.Time
-	endTime     *time.Time
+	startTime   time.Time      // 开始时间
+	endTime     *time.Time     // 结束时间
 	traceItems  []traceItem
 	parentTrace *Trace
-	logger      logr.Logger
+	logger      logr.Logger // logger 记录器
 }
 
 func (t *Trace) time() time.Time {
