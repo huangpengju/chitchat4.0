@@ -68,7 +68,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 
 	gin.SetMode(conf.Server.ENV) // 设置应用的模式(debug|release)
 
-	e := gin.New() // 定义一个 gin 引擎 (不带中间件的路由)
+	e := gin.New() // 定义一个 gin 引擎 (不带中间件的路由) ，返回一个没有注册中间件的gin.Engine对象,
 	e.Use(         // 挂载中间件
 		// 限速
 		rateLimitMiddleware,
