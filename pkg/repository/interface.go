@@ -7,8 +7,8 @@ import (
 )
 
 type Repository interface {
-	User() UserRepository
-	Group() GroupRepository
+	User() UserRepository   // 实现
+	Group() GroupRepository //
 	RBAC() RBACRepository
 	Tag() TagRepository
 	HotSearch() HotSearchRepository
