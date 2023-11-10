@@ -11,7 +11,7 @@ func NewRepository(db *gorm.DB, rdb *database.RedisDB) Repository {
 	r := &repository{
 		db:        db,
 		rdb:       rdb,
-		user:      newUserRepository(db, rdb),
+		user:      newUserRepository(db, rdb), // user 数据仓库
 		group:     newGroupRepository(db, rdb),
 		rbac:      newRBACRepository(db, rdb),
 		tag:       newTagRepository(db, rdb),
