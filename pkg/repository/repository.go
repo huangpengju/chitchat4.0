@@ -12,6 +12,8 @@ func NewRepository(db *gorm.DB, rdb *database.RedisDB) Repository {
 		db:        db,
 		rdb:       rdb,
 		user:      newUserRepository(db, rdb),
+		group:     newGroupRepository(db, rdb),
+		rbac:      newRBACRepository(db, rdb),
 		tag:       newTagRepository(db, rdb),
 		hotSearch: newHotSearchRepository(db, rdb),
 	}
@@ -19,6 +21,8 @@ func NewRepository(db *gorm.DB, rdb *database.RedisDB) Repository {
 		r.user,
 		r.tag,
 		r.hotSearch,
+		r.group,
+		r.rbac,
 	)
 
 	return r
@@ -36,6 +40,8 @@ func getMigrants(objs ...interface{}) []Migrant {
 
 type repository struct {
 	user      UserRepository
+	group     GroupRepository
+	rbac      RBACRepository
 	tag       TagRepository
 	hotSearch HotSearchRepository
 
@@ -47,6 +53,12 @@ type repository struct {
 
 func (r *repository) User() UserRepository {
 	return r.user
+}
+func (r *repository) Group() GroupRepository {
+	return r.group
+}
+func (r *repository) RBAC() RBACRepository {
+	return r.rbac
 }
 
 func (r *repository) Tag() TagRepository {

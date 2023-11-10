@@ -172,8 +172,8 @@ type ServerStatus struct {
 func (s *Server) Ping() *ServerStatus {
 	status := &ServerStatus{Ping: true}
 
-	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
-	// defer cannel()
+	ctx, cannel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cannel()
 
 	// ping 验证数据库的连接状态
 	if err := s.repository.Ping(ctx); err == nil {

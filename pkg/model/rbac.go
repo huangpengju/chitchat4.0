@@ -1,3 +1,14 @@
+/*
+ * @Author: huangpengju 15713716933@163.com
+ * @Date: 2023-11-06 15:20:06
+ * @LastEditors: huangpengju 15713716933@163.com
+ * @LastEditTime: 2023-11-10 11:27:12
+ * @FilePath: \chitchat4.0\pkg\model\rbac.go
+ * @Description: rbac 基于用户访问控制的 model
+ *
+ * Copyright (c) 2023 by huangpengju, All Rights Reserved.
+ */
+
 package model
 
 import (
@@ -22,7 +33,7 @@ const (
 	NamespaceScope Scope = "namespace" // 命名空间范围
 )
 
-// 角色 结构体
+// Role 角色 结构体
 type Role struct {
 	ID        uint   `json:"id" gorm:"autoIncrement;primaryKey"`
 	Name      string `json:"name" gorm:"size:100;not null;unique"`
@@ -49,7 +60,11 @@ var (
 	ViewOperationSet = set.NewString(request.GetOperation, request.ListOperation)
 )
 
-// Contain 控制
+/**
+ * @description:
+ * @param {string} verb
+ * @return {*}
+ */
 func (op Operation) Contain(verb string) bool {
 	// 判断 op
 	switch op {
@@ -73,6 +88,12 @@ type Rule struct {
 // Rules 表示规则集合： Rule 切片
 type Rules []Rule
 
+/**
+ * @description:
+ * @param {interface{}} value
+ * @return {*}
+ * @Date: 2023-11-10 11:06:36
+ */
 func (r *Rules) Scan(value interface{}) error {
 	bytes, ok := value.([]byte)
 	if !ok {
@@ -85,6 +106,11 @@ func (r *Rules) Scan(value interface{}) error {
 	return err
 }
 
+/**
+ * @description:
+ * @return {*}
+ * @Date: 2023-11-10 11:07:24
+ */
 func (r Rules) Value() (driver.Value, error) {
 	b, err := json.Marshal(r)
 	return string(b), err
