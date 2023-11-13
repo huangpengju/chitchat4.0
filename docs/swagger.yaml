@@ -53,6 +53,17 @@ definitions:
     - AllOperation
     - EditOperation
     - ViewOperation
+  model.Resource:
+    properties:
+      id:
+        type: integer
+      kind:
+        type: string
+      name:
+        type: string
+      scope:
+        $ref: '#/definitions/model.Scope'
+    type: object
   model.Role:
     properties:
       id:
@@ -186,7 +197,70 @@ paths:
       summary: Register user | 注册用户
       tags:
       - auth
+  /api/v1/operations:
+    get:
+      description: List operations | 操作列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.Operation'
+                  type: array
+              type: object
+      security:
+      - JWT: []
+      summary: List operations
+      tags:
+      - rbac
+  /api/v1/resources:
+    get:
+      description: List resources | 资源列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.Resource'
+                  type: array
+              type: object
+      security:
+      - JWT: []
+      summary: List resources
+      tags:
+      - rbac
   /api/v1/roles:
+    get:
+      description: List rbac role | rbac 角色列表
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.Role'
+                  type: array
+              type: object
+      security:
+      - JWT: []
+      summary: List rbac role
+      tags:
+      - rbac
     post:
       consumes:
       - application/json
@@ -208,6 +282,85 @@ paths:
       security:
       - JWT: []
       summary: Create rbac role
+      tags:
+      - rbac
+  /api/v1/roles/{id}:
+    delete:
+      description: Delete role | 删除角色
+      parameters:
+      - description: role id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Delete role
+      tags:
+      - rbac
+    get:
+      description: Get role  | 获取一个 rbac 的角色
+      parameters:
+      - description: role id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Role'
+              type: object
+      security:
+      - JWT: []
+      summary: Get role
+      tags:
+      - rbac
+    put:
+      consumes:
+      - application/json
+      description: Update rbac role | rbac 修改角色
+      parameters:
+      - description: rbac role info
+        in: body
+        name: role
+        required: true
+        schema:
+          $ref: '#/definitions/model.Role'
+      - description: role id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Role'
+              type: object
+      security:
+      - JWT: []
+      summary: Update rbac role
       tags:
       - rbac
   /api/v1/users:

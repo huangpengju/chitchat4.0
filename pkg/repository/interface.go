@@ -62,6 +62,11 @@ type HotSearchRepository interface {
 }
 
 type RBACRepository interface {
+	List() ([]model.Role, error)
+	ListResources() ([]model.Resource, error)
 	Create(role *model.Role) (*model.Role, error)
+	GetRoleByID(id int) (*model.Role, error)
+	Update(role *model.Role) (*model.Role, error)
+	Delete(id uint) error
 	Migrate() error
 }

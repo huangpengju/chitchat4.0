@@ -36,5 +36,11 @@ type HotSearchService interface {
  *
  */
 type RBACService interface {
+	List() ([]model.Role, error)
 	Create(role *model.Role) (*model.Role, error)
+	Get(id string) (*model.Role, error)
+	Update(id string, role *model.Role) (*model.Role, error)
+	Delete(id string) error
+	ListResources() ([]model.Resource, error)
+	ListOperations() ([]model.Operation, error)
 }

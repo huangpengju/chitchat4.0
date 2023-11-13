@@ -33,6 +33,22 @@ func newRBACRepository(db *gorm.DB, rdb *database.RedisDB) RBACRepository {
 	}
 }
 
+func (rbac *rbacRepository) List() ([]model.Role, error) {
+	roles := make([]model.Role, 0)
+	if err := rbac.db.Find(&roles).Error; err != nil {
+		return nil, err
+	}
+	return roles, nil
+}
+
+func (rbac *rbacRepository) ListResources() ([]model.Resource, error) {
+	resources := make([]model.Resource, 0)
+	if err := rbac.db.Order("name").Find(&resources).Error; err != nil {
+		return nil, err
+	}
+	return resources, nil
+}
+
 /**
  * @description: Create() 实现创建角色
  * @param {*model.Role} role
@@ -41,6 +57,26 @@ func newRBACRepository(db *gorm.DB, rdb *database.RedisDB) RBACRepository {
 func (rbac *rbacRepository) Create(role *model.Role) (*model.Role, error) {
 	err := rbac.db.Create(role).Error
 	return role, err
+}
+
+/**
+ * @description: GetRoleByID() 实现通过id获取Role
+ * @param {int} id
+ * @return {*}
+ */
+func (rbac *rbacRepository) GetRoleByID(id int) (*model.Role, error) {
+	role := &model.Role{}
+	err := rbac.db.First(role, id).Error
+	return role, err
+}
+
+func (rbac *rbacRepository) Update(role *model.Role) (*model.Role, error) {
+	err := rbac.db.Updates(role).Error
+	return role, err
+}
+
+func (rbac *rbacRepository) Delete(id uint) error {
+	return rbac.db.Delete(&model.Role{}, id).Error
 }
 
 /**
