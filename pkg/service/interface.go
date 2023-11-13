@@ -30,3 +30,11 @@ type HotSearchService interface {
 	// Delete(string) error
 	// Validate(*model.HotSearch) error
 }
+
+/**
+ * @description: RBACService 基于角色访问控制的服务
+ *
+ */
+type RBACService interface {
+	Create(role *model.Role) (*model.Role, error)
+}

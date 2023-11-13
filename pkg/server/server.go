@@ -47,6 +47,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "创建 Reids 客户端失败")
 	}
+	// 创建仓库
 	repository := repository.NewRepository(db, rdb)
 	if conf.DB.Migrate {
 		if err := repository.Migrate(); err != nil {
@@ -54,17 +55,22 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 		}
 	}
 
+	// 创建服务
 	userService := service.NewUserService(repository.User())
 	jwtService := authentication.NewJWTService(conf.Server.JWTSecret)
 	tagService := service.NewTagService(repository.Tag())
 	hotSearchService := service.NewHotSearchService(repository.HotSearch())
+	rbacService := service.NewRBACService(repository.RBAC())
 
+	// 创建控制器
 	userController := controller.NewUserController(userService)
 	authController := controller.NewAuthController(userService, jwtService)
 	tagController := controller.NewTagController(tagService)
 	hotSearchController := controller.NewHotSearchController(hotSearchService)
+	rbacController := controller.NewRbacController(rbacService)
 
-	controllers := []controller.Controller{userController, authController, tagController, hotSearchController}
+	// 控制器汇总
+	controllers := []controller.Controller{userController, authController, tagController, hotSearchController, rbacController}
 
 	gin.SetMode(conf.Server.ENV) // 设置应用的模式(debug|release)
 
@@ -88,10 +94,10 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 		middleware.AuthenticationMiddleware(jwtService, repository.User()), // 身份验证： JWT 中间件（jwtService服务和user仓库）
 
 		// 验证上一步Context中存入的user，以及上上上一步在Context中存入的当前次http请求中的部分信息，
-		middleware.AuthorizationMiddleware(), // 检查当前user的当前次请求是否被允许
+		// middleware.AuthorizationMiddleware(), // 检查当前user的当前次请求是否被允许
 
 		// Trace跟踪一组“步骤”包括：Hander、请求方法、请求路径等，并允许我们记录一个特定的步骤，如果它花费的时间超过了它在总允许时间中的份额
-		middleware.TraceMiddleware(), // 追踪中间件
+		// middleware.TraceMiddleware(), // 追踪中间件
 	)
 
 	// 返回一个服务

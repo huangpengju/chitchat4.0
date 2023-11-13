@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-06 15:20:06
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-10 14:11:45
+ * @LastEditTime: 2023-11-13 16:46:05
  * @FilePath: \chitchat4.0\pkg\repository\rbac.go
  * @Description: Role-Based Access Control 基于角色的访问控制
  */
@@ -20,11 +20,12 @@ type rbacRepository struct {
 	rdb *database.RedisDB
 }
 
-// newRBACRepository
-//
-//	@param db
-//	@param rdb
-//	@return RBACRepository
+/**
+ * @description: newRBACRepository 返回一个RBAC仓库
+ * @param {*gorm.DB} db
+ * @param {*database.RedisDB} rdb
+ * @return {*}
+ */
 func newRBACRepository(db *gorm.DB, rdb *database.RedisDB) RBACRepository {
 	return &rbacRepository{
 		db:  db,
@@ -32,6 +33,20 @@ func newRBACRepository(db *gorm.DB, rdb *database.RedisDB) RBACRepository {
 	}
 }
 
+/**
+ * @description: Create() 实现创建角色
+ * @param {*model.Role} role
+ * @return {*}
+ */
+func (rbac *rbacRepository) Create(role *model.Role) (*model.Role, error) {
+	err := rbac.db.Create(role).Error
+	return role, err
+}
+
+/**
+ * @description: Migrate 实现数据库model迁移
+ * @return {*}
+ */
 func (rbac *rbacRepository) Migrate() error {
 	return rbac.db.AutoMigrate(&model.Role{}, &model.Resource{})
 }

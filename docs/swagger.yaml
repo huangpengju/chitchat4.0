@@ -39,6 +39,60 @@ definitions:
       token:
         type: string
     type: object
+  model.Operation:
+    enum:
+    - '*'
+    - edit
+    - view
+    type: string
+    x-enum-comments:
+      AllOperation: 所有操作
+      EditOperation: 编辑操作
+      ViewOperation: 查看操作
+    x-enum-varnames:
+    - AllOperation
+    - EditOperation
+    - ViewOperation
+  model.Role:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      namespace:
+        description: 表示命名空间
+        type: string
+      rules:
+        description: Rules 表示规则集合，是切片类型
+        items:
+          $ref: '#/definitions/model.Rule'
+        type: array
+      scope:
+        allOf:
+        - $ref: '#/definitions/model.Scope'
+        description: Scope 表示范围，string类型
+    type: object
+  model.Rule:
+    properties:
+      operation:
+        allOf:
+        - $ref: '#/definitions/model.Operation'
+        description: 操作
+      resource:
+        description: 资源
+        type: string
+    type: object
+  model.Scope:
+    enum:
+    - cluster
+    - namespace
+    type: string
+    x-enum-comments:
+      ClusterScope: 串范围
+      NamespaceScope: 命名空间范围
+    x-enum-varnames:
+    - ClusterScope
+    - NamespaceScope
   model.UpdatedUser:
     properties:
       email:
@@ -132,6 +186,30 @@ paths:
       summary: Register user | 注册用户
       tags:
       - auth
+  /api/v1/roles:
+    post:
+      consumes:
+      - application/json
+      description: Create rbac role | 创建 rbac 的角色
+      parameters:
+      - description: rbac role info
+        in: body
+        name: role
+        required: true
+        schema:
+          $ref: '#/definitions/model.Role'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Create rbac role
+      tags:
+      - rbac
   /api/v1/users:
     get:
       description: 获取用户列表并存储

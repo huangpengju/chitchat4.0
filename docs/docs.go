@@ -115,6 +115,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/roles": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Create rbac role | 创建 rbac 的角色",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rbac"
+                ],
+                "summary": "Create rbac role",
+                "parameters": [
+                    {
+                        "description": "rbac role info",
+                        "name": "role",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Role"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/users": {
             "get": {
                 "security": [
@@ -380,6 +419,86 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "model.Operation": {
+            "type": "string",
+            "enum": [
+                "*",
+                "edit",
+                "view"
+            ],
+            "x-enum-comments": {
+                "AllOperation": "所有操作",
+                "EditOperation": "编辑操作",
+                "ViewOperation": "查看操作"
+            },
+            "x-enum-varnames": [
+                "AllOperation",
+                "EditOperation",
+                "ViewOperation"
+            ]
+        },
+        "model.Role": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "description": "表示命名空间",
+                    "type": "string"
+                },
+                "rules": {
+                    "description": "Rules 表示规则集合，是切片类型",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Rule"
+                    }
+                },
+                "scope": {
+                    "description": "Scope 表示范围，string类型",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Scope"
+                        }
+                    ]
+                }
+            }
+        },
+        "model.Rule": {
+            "type": "object",
+            "properties": {
+                "operation": {
+                    "description": "操作",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Operation"
+                        }
+                    ]
+                },
+                "resource": {
+                    "description": "资源",
+                    "type": "string"
+                }
+            }
+        },
+        "model.Scope": {
+            "type": "string",
+            "enum": [
+                "cluster",
+                "namespace"
+            ],
+            "x-enum-comments": {
+                "ClusterScope": "串范围",
+                "NamespaceScope": "命名空间范围"
+            },
+            "x-enum-varnames": [
+                "ClusterScope",
+                "NamespaceScope"
+            ]
         },
         "model.UpdatedUser": {
             "type": "object",

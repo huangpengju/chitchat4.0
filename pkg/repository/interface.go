@@ -1,3 +1,13 @@
+/*
+ * @Author: huangpengju 15713716933@163.com
+ * @Date: 2023-09-27 14:50:58
+ * @LastEditors: huangpengju 15713716933@163.com
+ * @LastEditTime: 2023-11-13 15:33:52
+ * @FilePath: \chitchat4.0\pkg\repository\interface.go
+ * @Description: 接口
+ *
+ * Copyright (c) 2023 by huangpengju, All Rights Reserved.
+ */
 package repository
 
 import (
@@ -52,5 +62,6 @@ type HotSearchRepository interface {
 }
 
 type RBACRepository interface {
+	Create(role *model.Role) (*model.Role, error)
 	Migrate() error
 }

@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-06 15:20:06
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-10 11:27:12
+ * @LastEditTime: 2023-11-13 16:51:06
  * @FilePath: \chitchat4.0\pkg\model\rbac.go
  * @Description: rbac 基于用户访问控制的 model
  *

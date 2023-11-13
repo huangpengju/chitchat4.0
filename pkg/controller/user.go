@@ -152,6 +152,10 @@ func (u *UserController) RegisterRoute(api *gin.RouterGroup) {
 	// api.DELETE("/users/:id", u.Delete)
 }
 
+/**
+ * @description: Name()返回控制器的名称
+ * @return {*}
+ */
 func (u *UserController) Name() string {
 	return "User"
 }
