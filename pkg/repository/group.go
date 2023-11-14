@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-06 15:20:06
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-10 15:27:34
+ * @LastEditTime: 2023-11-14 16:16:58
  * @FilePath: \chitchat4.0\pkg\repository\group.go
  * @Description: group 分组仓库，实现接口
  *
@@ -33,6 +33,29 @@ func newGroupRepository(db *gorm.DB, rdb *database.RedisDB) GroupRepository {
 		db:  db,
 		rdb: rdb,
 	}
+}
+
+/**
+ * @description: Create()实现 group的创建
+ * @param {*model.User} user
+ * @param {*model.Group} group
+ * @return {*}
+ */
+func (g *groupRepository) Create(user *model.User, group *model.Group) (*model.Group, error) {
+	group.CreatorId = user.ID
+	group.Users = []model.User{*user}
+	err := g.db.Create(group).Error
+	return group, err
+}
+
+/**
+ * @description: RoleBinding()实现group与role的绑定
+ * @param {*model.Role} role
+ * @param {*model.Group} group
+ * @return {*}
+ */
+func (g *groupRepository) RoleBinding(role *model.Role, group *model.Group) error {
+	return g.db.Model(group).Association("Roles").Append(role)
 }
 
 /**

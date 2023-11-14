@@ -26,7 +26,7 @@ func NewRbacController(rbacService service.RBACService) Controller {
 	return &RBACController{rbacService: rbacService}
 }
 
-// @Summary List rbac role
+// @Summary List rbac role | rbac 角色列表
 // @Description List rbac role | rbac 角色列表
 // @Product json
 // @Tags rbac
@@ -42,7 +42,7 @@ func (rbac *RBACController) List(c *gin.Context) {
 	common.ResponseSuccess(c, roles)
 }
 
-// @Summary Create rbac role
+// @Summary Create rbac role | 创建 rbac 的角色
 // @Description Create rbac role | 创建 rbac 的角色
 // @Accept json
 // @Produce json
@@ -67,8 +67,8 @@ func (rbac *RBACController) Create(c *gin.Context) {
 
 }
 
-// @Summary Get role
-// @Description Get role  | 获取一个 rbac 的角色
+// @Summary Get role | 获取一个 rbac 的角色
+// @Description Get role | 获取一个 rbac 的角色
 // @Produce json
 // @Tags rbac
 // @Security JWT
@@ -85,7 +85,7 @@ func (rbac *RBACController) Get(c *gin.Context) {
 	common.ResponseSuccess(c, role)
 }
 
-// @Summary Update rbac role
+// @Summary Update rbac role | rbac 修改角色
 // @Description Update rbac role | rbac 修改角色
 // @Accept json
 // @Produce json
@@ -110,7 +110,7 @@ func (rbac *RBACController) Update(c *gin.Context) {
 	common.ResponseSuccess(c, role)
 }
 
-// @Summary Delete role
+// @Summary Delete role | 删除角色
 // @Description Delete role | 删除角色
 // @Produce json
 // @Tags rbac
@@ -126,7 +126,7 @@ func (rbac *RBACController) Delete(c *gin.Context) {
 	common.ResponseSuccess(c, nil)
 }
 
-// @Summary List resources
+// @Summary List resources | 资源列表
 // @Description List resources | 资源列表
 // @Produce json
 // @Tags rbac
@@ -141,7 +141,7 @@ func (rbac *RBACController) ListResources(c *gin.Context) {
 	common.ResponseSuccess(c, data)
 }
 
-// @Summary List operations
+// @Summary List operations | 操作列表
 // @Description List operations | 操作列表
 // @Produce json
 // @Tags rbac

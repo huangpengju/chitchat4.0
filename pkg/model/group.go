@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-06 15:20:06
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-10 16:37:43
+ * @LastEditTime: 2023-11-14 16:32:51
  * @FilePath: \chitchat4.0\pkg\model\group.go
  * @Description: group 分组的 model
  *
@@ -47,7 +47,7 @@ func (g *CreatedGroup) GetGroup(uid uint) *Group {
 	return &Group{
 		Name:      g.Name,
 		Describe:  g.Describe,
-		CreatorId: g.CreatorId,
+		CreatorId: g.CreatorId, // uid
 	}
 }
 

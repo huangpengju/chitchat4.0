@@ -1,3 +1,13 @@
+/*
+ * @Author: huangpengju 15713716933@163.com
+ * @Date: 2023-09-28 16:29:32
+ * @LastEditors: huangpengju 15713716933@163.com
+ * @LastEditTime: 2023-11-14 15:32:37
+ * @FilePath: \chitchat4.0\pkg\service\interface.go
+ * @Description:
+ *
+ * Copyright (c) 2023 by huangpengju, All Rights Reserved.
+ */
 package service
 
 import "chitchat4.0/pkg/model"
@@ -11,6 +21,10 @@ type UserService interface {
 	Validate(*model.User) error
 	Auth(*model.AuthUser) (*model.User, error)
 	Default(*model.User)
+}
+
+type GroupService interface {
+	Create(*model.User, *model.Group) (*model.Group, error)
 }
 
 type TagService interface {

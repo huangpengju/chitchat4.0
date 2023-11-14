@@ -115,6 +115,57 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/groups": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Create group and stroage | 创建 group 和 stroage 存储",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "group"
+                ],
+                "summary": "Create group | 创建 group",
+                "parameters": [
+                    {
+                        "description": "group info",
+                        "name": "group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreatedGroup"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Group"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/operations": {
             "get": {
                 "security": [
@@ -129,7 +180,7 @@ const docTemplate = `{
                 "tags": [
                     "rbac"
                 ],
-                "summary": "List operations",
+                "summary": "List operations | 操作列表",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -169,7 +220,7 @@ const docTemplate = `{
                 "tags": [
                     "rbac"
                 ],
-                "summary": "List resources",
+                "summary": "List resources | 资源列表",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -206,7 +257,7 @@ const docTemplate = `{
                 "tags": [
                     "rbac"
                 ],
-                "summary": "List rbac role",
+                "summary": "List rbac role | rbac 角色列表",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -247,7 +298,7 @@ const docTemplate = `{
                 "tags": [
                     "rbac"
                 ],
-                "summary": "Create rbac role",
+                "summary": "Create rbac role | 创建 rbac 的角色",
                 "parameters": [
                     {
                         "description": "rbac role info",
@@ -276,14 +327,14 @@ const docTemplate = `{
                         "JWT": []
                     }
                 ],
-                "description": "Get role  | 获取一个 rbac 的角色",
+                "description": "Get role | 获取一个 rbac 的角色",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "rbac"
                 ],
-                "summary": "Get role",
+                "summary": "Get role | 获取一个 rbac 的角色",
                 "parameters": [
                     {
                         "type": "integer",
@@ -330,7 +381,7 @@ const docTemplate = `{
                 "tags": [
                     "rbac"
                 ],
-                "summary": "Update rbac role",
+                "summary": "Update rbac role | rbac 修改角色",
                 "parameters": [
                     {
                         "description": "rbac role info",
@@ -383,7 +434,7 @@ const docTemplate = `{
                 "tags": [
                     "rbac"
                 ],
-                "summary": "Delete role",
+                "summary": "Delete role | 删除角色",
                 "parameters": [
                     {
                         "type": "integer",
@@ -641,6 +692,22 @@ const docTemplate = `{
                 }
             }
         },
+        "model.CreatedGroup": {
+            "type": "object",
+            "properties": {
+                "creatorId": {
+                    "description": "创建者ID",
+                    "type": "integer"
+                },
+                "describe": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "model.CreatedUser": {
             "type": "object",
             "properties": {
@@ -655,6 +722,53 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                }
+            }
+        },
+        "model.Group": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "creatorId": {
+                    "description": "创作者Id",
+                    "type": "integer"
+                },
+                "describe": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "kind": {
+                    "description": "种类",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "roles": {
+                    "description": "角色组集合",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Role"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "updaterId": {
+                    "description": "更新 Id",
+                    "type": "integer"
+                },
+                "users": {
+                    "description": "用户集合",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.User"
+                    }
                 }
             }
         },
