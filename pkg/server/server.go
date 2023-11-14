@@ -57,7 +57,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 
 	// 创建服务
 	userService := service.NewUserService(repository.User())
-	groupService := service.NewGroupService(repository.Group(), repository.User())
+	groupService := service.NewGroupService(repository.Group(), repository.User(), repository.RBAC())
 	jwtService := authentication.NewJWTService(conf.Server.JWTSecret)
 	tagService := service.NewTagService(repository.Tag())
 	hotSearchService := service.NewHotSearchService(repository.HotSearch())

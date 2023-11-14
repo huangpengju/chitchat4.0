@@ -19,10 +19,11 @@ type groupService struct {
  * @param {repository.UserRepository} userRepository
  * @return {*}
  */
-func NewGroupService(groupRepository repository.GroupRepository, userRepository repository.UserRepository) GroupService {
+func NewGroupService(groupRepository repository.GroupRepository, userRepository repository.UserRepository, rbacRepository repository.RBACRepository) GroupService {
 	return &groupService{
 		groupRepository: groupRepository,
 		userRepository:  userRepository,
+		rbacRepository:  rbacRepository,
 	}
 }
 
@@ -87,9 +88,9 @@ func (g *groupService) createDefaultRoles(group *model.Group) error {
 	}
 	for i := range roles {
 		if _, err := g.rbacRepository.Create(&roles[i]); err != nil {
-
 			return err
 		}
 	}
+
 	return g.groupRepository.RoleBinding(&roles[0], group)
 }

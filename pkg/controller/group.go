@@ -7,7 +7,6 @@ import (
 	"chitchat4.0/pkg/common"
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/service"
-	"chitchat4.0/pkg/utils/trace"
 	"github.com/gin-gonic/gin"
 )
 
@@ -47,8 +46,8 @@ func (g *GroupController) Create(c *gin.Context) {
 	}
 
 	group := createdGroup.GetGroup(user.ID)
-	common.TraceStep(c, "开始创建group", trace.Field{Key: "group", Value: group.Name})
-	defer common.TraceStep(c, "创建group结束", trace.Field{Key: "group", Value: group.Name})
+	// common.TraceStep(c, "开始创建group", trace.Field{Key: "group", Value: group.Name})
+	// defer common.TraceStep(c, "创建group结束", trace.Field{Key: "group", Value: group.Name})
 
 	group, err := g.groupService.Create(user, group)
 	if err != nil {
