@@ -1,3 +1,13 @@
+/*
+ * @Author: huangpengju 15713716933@163.com
+ * @Date: 2023-11-13 15:40:47
+ * @LastEditors: huangpengju 15713716933@163.com
+ * @LastEditTime: 2023-11-14 15:09:16
+ * @FilePath: \chitchat4.0\pkg\service\rbac.go
+ * @Description:
+ *
+ * Copyright (c) 2023 by huangpengju, All Rights Reserved.
+ */
 package service
 
 import (
@@ -76,17 +86,17 @@ func (rbac *rbacService) ListResources() ([]model.Resource, error) {
 
 func (rbac *rbacService) ListOperations() ([]model.Operation, error) {
 	return []model.Operation{
-		model.AllOperation,
-		model.EditOperation,
-		model.ViewOperation,
-		request.CreateOperation,
-		request.PatchOperation,
-		request.UpdateOperation,
-		request.GetOperation,
-		request.ListOperation,
-		request.DeleteOperation,
-		"log",
-		"exec",
-		"proxy",
+		model.AllOperation,      // 所有操作
+		model.EditOperation,     // 编辑操作
+		model.ViewOperation,     // 查看操作
+		request.CreateOperation, // create创建操作
+		request.PatchOperation,  // patch更新局部操作
+		request.UpdateOperation, // update更新全部操作
+		request.GetOperation,    // get获取单个（详情）操作
+		request.ListOperation,   // list获取列表操作
+		request.DeleteOperation, // delete删除操作
+		"log",                   // 日志
+		"exec",                  // 执行
+		"proxy",                 // 代理
 	}, nil
 }

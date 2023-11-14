@@ -171,11 +171,11 @@ func (rbac *RBACController) Name() string {
  * @return {*}
  */
 func (rbac *RBACController) RegisterRoute(api *gin.RouterGroup) {
-	api.GET("/roles", rbac.List)
-	api.POST("/roles", rbac.Create) // rbac.Create 处理程序函数，开始创建角色
-	api.GET("/roles/:id", rbac.Get) // rbac.Get 获取指定id的 roles
-	api.PUT("/roles/:id", rbac.Update)
-	api.DELETE("/roles/:id", rbac.Delete)
-	api.GET("/resources", rbac.ListResources)
-	api.GET("/operations", rbac.ListOperations)
+	api.GET("/roles", rbac.List)                // rbac.List 获取role列表
+	api.POST("/roles", rbac.Create)             // rbac.Create 处理程序函数，开始创建角色
+	api.GET("/roles/:id", rbac.Get)             // rbac.Get 获取指定id的 roles
+	api.PUT("/roles/:id", rbac.Update)          // rbac.Update 更新role
+	api.DELETE("/roles/:id", rbac.Delete)       // rbac.Delete 删除role
+	api.GET("/resources", rbac.ListResources)   // rbac.ListResources 资源列表
+	api.GET("/operations", rbac.ListOperations) // rbac.ListOperations 操作列表
 }

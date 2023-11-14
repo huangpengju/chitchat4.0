@@ -13,12 +13,12 @@ const (
 )
 
 const (
-	GetOperation    = "get"
-	ListOperation   = "list"
-	CreateOperation = "create"
-	UpdateOperation = "update"
-	PatchOperation  = "patch"
-	DeleteOperation = "delete"
+	GetOperation    = "get"    // get获取单个
+	ListOperation   = "list"   // list获取列表
+	CreateOperation = "create" // create创建
+	UpdateOperation = "update" // update更新
+	PatchOperation  = "patch"  // patch更新一部分
+	DeleteOperation = "delete" // delete删除
 )
 
 // RequestInfoResolver 请求信息解析接口
