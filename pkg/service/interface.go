@@ -25,6 +25,7 @@ type UserService interface {
 
 type GroupService interface {
 	Create(*model.User, *model.Group) (*model.Group, error)
+	Get(id string) (*model.Group, error)
 }
 
 type TagService interface {

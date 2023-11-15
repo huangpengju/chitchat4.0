@@ -1,3 +1,13 @@
+/*
+ * @Author: huangpengju 15713716933@163.com
+ * @Date: 2023-11-14 15:29:14
+ * @LastEditors: huangpengju 15713716933@163.com
+ * @LastEditTime: 2023-11-15 16:33:07
+ * @FilePath: \chitchat4.0\pkg\controller\group.go
+ * @Description:
+ *
+ * Copyright (c) 2023 by huangpengju, All Rights Reserved.
+ */
 package controller
 
 import (
@@ -57,6 +67,23 @@ func (g *GroupController) Create(c *gin.Context) {
 	common.ResponseSuccess(c, group)
 }
 
+// @Summary Get group | 获取 group
+// @Description Get group | 通过id查询group
+// @Produce json
+// @Tags group
+// @Security JWT
+// @Param id path int true "group id"
+// @Success 200 {object} common.Response{data=model.Group}
+// @Router /api/v1/groups/{id} [get]
+func (g *GroupController) Get(c *gin.Context) {
+	group, err := g.groupService.Get(c.Param("id"))
+	if err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	common.ResponseSuccess(c, group)
+}
+
 /**
  * @description: RegisterRoute() 注册路由
  * @param {*gin.HandlerFunc} api
@@ -64,6 +91,7 @@ func (g *GroupController) Create(c *gin.Context) {
  */
 func (g *GroupController) RegisterRoute(api *gin.RouterGroup) {
 	api.POST("/groups", g.Create)
+	api.GET("/groups/:id", g.Get)
 }
 
 /**

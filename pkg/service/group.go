@@ -1,7 +1,18 @@
+/*
+ * @Author: huangpengju 15713716933@163.com
+ * @Date: 2023-11-14 15:30:32
+ * @LastEditors: huangpengju 15713716933@163.com
+ * @LastEditTime: 2023-11-15 16:29:35
+ * @FilePath: \chitchat4.0\pkg\service\group.go
+ * @Description:
+ *
+ * Copyright (c) 2023 by huangpengju, All Rights Reserved.
+ */
 package service
 
 import (
 	"fmt"
+	"strconv"
 
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/repository"
@@ -93,4 +104,17 @@ func (g *groupService) createDefaultRoles(group *model.Group) error {
 	}
 
 	return g.groupRepository.RoleBinding(&roles[0], group)
+}
+
+/**
+ * @description: Get() 通过id查询group服务
+ * @param {string} id
+ * @return {*}
+ */
+func (g *groupService) Get(id string) (*model.Group, error) {
+	gid, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+	return g.groupRepository.GetGroupByID(uint(gid))
 }
