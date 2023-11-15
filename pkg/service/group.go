@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:30:32
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-15 16:29:35
+ * @LastEditTime: 2023-11-15 16:51:09
  * @FilePath: \chitchat4.0\pkg\service\group.go
  * @Description:
  *
@@ -117,4 +117,12 @@ func (g *groupService) Get(id string) (*model.Group, error) {
 		return nil, err
 	}
 	return g.groupRepository.GetGroupByID(uint(gid))
+}
+
+/**
+ * @description: List()查询所有group的服务
+ * @return {*}
+ */
+func (g *groupService) List() ([]model.Group, error) {
+	return g.groupRepository.List()
 }

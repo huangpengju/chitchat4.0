@@ -242,6 +242,27 @@ paths:
       tags:
       - auth
   /api/v1/groups:
+    get:
+      description: List group | 查询所有group列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.Group'
+                  type: array
+              type: object
+      security:
+      - JWT: []
+      summary: List group | group 列表
+      tags:
+      - group
     post:
       consumes:
       - application/json

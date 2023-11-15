@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-09-28 16:29:32
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-14 15:32:37
+ * @LastEditTime: 2023-11-15 16:46:29
  * @FilePath: \chitchat4.0\pkg\service\interface.go
  * @Description:
  *
@@ -24,6 +24,7 @@ type UserService interface {
 }
 
 type GroupService interface {
+	List() ([]model.Group, error)
 	Create(*model.User, *model.Group) (*model.Group, error)
 	Get(id string) (*model.Group, error)
 }

@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:29:14
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-15 16:33:07
+ * @LastEditTime: 2023-11-15 16:55:28
  * @FilePath: \chitchat4.0\pkg\controller\group.go
  * @Description:
  *
@@ -17,6 +17,7 @@ import (
 	"chitchat4.0/pkg/common"
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/service"
+	"chitchat4.0/pkg/utils/trace"
 	"github.com/gin-gonic/gin"
 )
 
@@ -56,8 +57,8 @@ func (g *GroupController) Create(c *gin.Context) {
 	}
 
 	group := createdGroup.GetGroup(user.ID)
-	// common.TraceStep(c, "开始创建group", trace.Field{Key: "group", Value: group.Name})
-	// defer common.TraceStep(c, "创建group结束", trace.Field{Key: "group", Value: group.Name})
+	common.TraceStep(c, "开始创建group", trace.Field{Key: "group", Value: group.Name})
+	defer common.TraceStep(c, "创建group结束", trace.Field{Key: "group", Value: group.Name})
 
 	group, err := g.groupService.Create(user, group)
 	if err != nil {
@@ -84,12 +85,31 @@ func (g *GroupController) Get(c *gin.Context) {
 	common.ResponseSuccess(c, group)
 }
 
+// @Summary List group | group 列表
+// @Description List group | 查询所有group列表
+// @Produce json
+// @Tags group
+// @Security JWT
+// @Success 200 {object} common.Response{data=[]model.Group}
+// @Router /api/v1/groups [get]
+func (g *GroupController) List(c *gin.Context) {
+	common.TraceStep(c, "start list group(开始获取组列表)")
+	groups, err := g.groupService.List()
+	if err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	common.TraceStep(c, "list group done(group列表结束)")
+	common.ResponseSuccess(c, groups)
+}
+
 /**
  * @description: RegisterRoute() 注册路由
  * @param {*gin.HandlerFunc} api
  * @return {*}
  */
 func (g *GroupController) RegisterRoute(api *gin.RouterGroup) {
+	api.GET("/groups", g.List)
 	api.POST("/groups", g.Create)
 	api.GET("/groups/:id", g.Get)
 }
