@@ -16,6 +16,10 @@ import (
 	"gorm.io/gorm"
 )
 
+var (
+	groupUpdateFields = []string{"Name", "Describe", "Roles", "UpdaterId"}
+)
+
 // group 数据库仓库
 type groupRepository struct {
 	db  *gorm.DB
@@ -89,4 +93,9 @@ func (g *groupRepository) List() ([]model.Group, error) {
 		return nil, err
 	}
 	return groups, nil
+}
+
+func (g *groupRepository) Update(group *model.Group) (*model.Group, error) {
+	err := g.db.Model(&group).Select(groupUpdateFields).Updates(group).Error
+	return group, err
 }

@@ -27,6 +27,7 @@ type GroupService interface {
 	List() ([]model.Group, error)
 	Create(*model.User, *model.Group) (*model.Group, error)
 	Get(id string) (*model.Group, error)
+	Update(string, *model.Group) (*model.Group, error)
 }
 
 type TagService interface {

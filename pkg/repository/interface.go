@@ -44,9 +44,12 @@ type UserRepository interface {
 
 // 分组
 type GroupRepository interface {
+	GetGroupByID(uint) (*model.Group, error)
+
 	List() ([]model.Group, error)
 	Create(*model.User, *model.Group) (*model.Group, error)
-	GetGroupByID(uint) (*model.Group, error)
+
+	Update(*model.Group) (*model.Group, error)
 
 	RoleBinding(role *model.Role, group *model.Group) error
 	Migrate() error

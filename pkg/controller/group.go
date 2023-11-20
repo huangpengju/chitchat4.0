@@ -103,6 +103,42 @@ func (g *GroupController) List(c *gin.Context) {
 	common.ResponseSuccess(c, groups)
 }
 
+// @Summary Update group | 修改 group
+// @Description Update group and storage | 修改group和保存
+// @Accept json
+// @Produce json
+// @Tags group
+// @Security JWT
+// @Param group body model.UpdatedGroup true "group info"
+// @Param id path int true "group id"
+// @Success 200 {object} common.Response{data=model.Group}
+// @Router /api/v1/groups/{id} [put]
+func (g *GroupController) Update(c *gin.Context) {
+	user := common.GetUser(c)
+	if user == nil {
+		common.ResponseFailed(c, http.StatusBadRequest, fmt.Errorf("Update Group:Failed to get user"))
+		return
+	}
+
+	id := c.Param("id")
+
+	new := new(model.UpdatedGroup)
+	if err := c.BindJSON(new); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+
+	common.TraceStep(c, "start update group", trace.Field{Key: "group", Value: new.Name})
+	defer common.TraceStep(c, "update group done", trace.Field{Key: "group", Value: new.Name})
+
+	group, err := g.groupService.Update(id, new.GetGroup(user.ID))
+	if err != nil {
+		common.ResponseFailed(c, http.StatusInternalServerError, err)
+		return
+	}
+	common.ResponseSuccess(c, group)
+}
+
 /**
  * @description: RegisterRoute() 注册路由
  * @param {*gin.HandlerFunc} api
@@ -112,6 +148,7 @@ func (g *GroupController) RegisterRoute(api *gin.RouterGroup) {
 	api.GET("/groups", g.List)
 	api.POST("/groups", g.Create)
 	api.GET("/groups/:id", g.Get)
+	api.PUT("/groups/:id", g.Update)
 }
 
 /**

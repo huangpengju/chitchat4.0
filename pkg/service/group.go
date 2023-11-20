@@ -126,3 +126,12 @@ func (g *groupService) Get(id string) (*model.Group, error) {
 func (g *groupService) List() ([]model.Group, error) {
 	return g.groupRepository.List()
 }
+
+func (g *groupService) Update(id string, group *model.Group) (*model.Group, error) {
+	gid, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+	group.ID = uint(gid)
+	return g.groupRepository.Update(group)
+}

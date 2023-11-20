@@ -245,6 +245,62 @@
                         }
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Update group and storage | 修改group和保存",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "group"
+                ],
+                "summary": "Update group | 修改 group",
+                "parameters": [
+                    {
+                        "description": "group info",
+                        "name": "group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdatedGroup"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "group id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Group"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         },
         "/api/v1/operations": {
@@ -960,6 +1016,20 @@
                 "ClusterScope",
                 "NamespaceScope"
             ]
+        },
+        "model.UpdatedGroup": {
+            "type": "object",
+            "properties": {
+                "describe": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updaterId": {
+                    "type": "integer"
+                }
+            }
         },
         "model.UpdatedUser": {
             "type": "object",
