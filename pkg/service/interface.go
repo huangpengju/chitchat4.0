@@ -32,6 +32,7 @@ type GroupService interface {
 	GetUsers(string) (model.Users, error)
 	AddUser(user *model.User, gid string) error
 	DelUser(uid, gid string) error
+	AddRole(id, rid string) error
 }
 
 type TagService interface {

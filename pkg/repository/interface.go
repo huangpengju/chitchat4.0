@@ -45,6 +45,7 @@ type UserRepository interface {
 // 分组
 type GroupRepository interface {
 	GetGroupByID(uint) (*model.Group, error)
+	GetGroupByName(string) (*model.Group, error)
 
 	List() ([]model.Group, error)
 	Create(*model.User, *model.Group) (*model.Group, error)
@@ -54,6 +55,7 @@ type GroupRepository interface {
 	GetUsers(*model.Group) (model.Users, error)
 	AddUser(user *model.User, group *model.Group) error
 	DelUser(user *model.User, group *model.Group) error
+	AddRole(role *model.Role, group *model.Group) error
 
 	RoleBinding(role *model.Role, group *model.Group) error
 	Migrate() error

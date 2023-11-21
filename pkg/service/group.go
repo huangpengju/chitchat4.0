@@ -181,3 +181,17 @@ func (g *groupService) DelUser(uid, gid string) error {
 	}
 	return g.groupRepository.DelUser(user, &model.Group{ID: uint(groupID)})
 }
+
+func (g *groupService) AddRole(id, rid string) error {
+	gid, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+
+	roleId, err := strconv.Atoi(rid)
+	if err != nil {
+		return err
+	}
+
+	return g.groupRepository.AddRole(&model.Role{ID: uint(roleId)}, &model.Group{ID: uint(gid)})
+}

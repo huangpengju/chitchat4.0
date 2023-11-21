@@ -219,6 +219,10 @@ func (g *GroupController) DelUser(c *gin.Context) {
 	common.ResponseSuccess(c, nil)
 }
 
+func (g *GroupController)AddRole(c *gin.Context){
+	if err := g.groupService.AddRole(c.Param("id"),c.Param("rid"))
+}
+
 /**
  * @description: RegisterRoute() 注册路由
  * @param {*gin.HandlerFunc} api
@@ -233,6 +237,7 @@ func (g *GroupController) RegisterRoute(api *gin.RouterGroup) {
 	api.GET("/groups/:id/users", g.GetUsers)
 	api.POST("/groups/:id/users", g.AddUser)
 	api.DELETE("/groups/:id/users", g.DelUser)
+	api.POST("/groups/:id/roles/:rid", g.AddRole)
 }
 
 /**

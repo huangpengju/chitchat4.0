@@ -117,3 +117,22 @@ func (g *groupRepository) AddUser(user *model.User, group *model.Group) error {
 func (g *groupRepository) DelUser(user *model.User, group *model.Group) error {
 	return g.db.Model(group).Association(model.UserAssociation).Delete(user)
 }
+
+func (g *groupRepository) AddRole(role *model.Role, group *model.Group) error {
+	var err error
+	if group.ID == 0 {
+		group, err = g.GetGroupByName(group.Name)
+	}
+	if err != nil {
+		return err
+	}
+	return g.db.Model(group).Association("Roles").Append(role)
+}
+
+func (g *groupRepository) GetGroupByName(name string) (*model.Group, error) {
+	group := new(model.Group)
+	if err := g.db.Preload("Users").Preload("Roles").Where("name = ?", name).First(group).Error; err != nil {
+		return nil, err
+	}
+	return group, nil
+}
