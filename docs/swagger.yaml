@@ -301,6 +301,26 @@ paths:
       tags:
       - group
   /api/v1/groups/{id}:
+    delete:
+      description: Delete group | 删除指定的group
+      parameters:
+      - description: group id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Delete group | 删除group
+      tags:
+      - group
     get:
       description: Get group | 通过id查询group
       parameters:
@@ -357,6 +377,53 @@ paths:
       security:
       - JWT: []
       summary: Update group | 修改 group
+      tags:
+      - group
+  /api/v1/groups/{id}/users:
+    get:
+      description: Get users | 根据 group 获取user集合
+      parameters:
+      - description: group id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Get users | 获取user集合
+      tags:
+      - group
+    post:
+      description: Add user to group | 把user添加到group中
+      parameters:
+      - description: group id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: user info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Group Add user | 添加user
       tags:
       - group
   /api/v1/operations:

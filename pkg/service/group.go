@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:30:32
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-15 16:51:09
+ * @LastEditTime: 2023-11-21 14:01:34
  * @FilePath: \chitchat4.0\pkg\service\group.go
  * @Description:
  *
@@ -134,4 +134,32 @@ func (g *groupService) Update(id string, group *model.Group) (*model.Group, erro
 	}
 	group.ID = uint(gid)
 	return g.groupRepository.Update(group)
+}
+
+func (g *groupService) Delete(id string) error {
+	gid, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+	return g.groupRepository.Delete(uint(gid))
+}
+
+func (g *groupService) GetUsers(id string) (model.Users, error) {
+	gid, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+	return g.groupRepository.GetUsers(&model.Group{ID: uint(gid)})
+}
+
+func (g *groupService) AddUser(user *model.User, id string) error {
+	// var err error
+	if user.ID == 0 {
+		return fmt.Errorf("%v", "Group AddUser:invaild user info")
+	}
+	gid, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+	return g.groupRepository.AddUser(user, &model.Group{ID: uint(gid)})
 }

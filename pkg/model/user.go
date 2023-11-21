@@ -2,6 +2,13 @@ package model
 
 import (
 	"encoding/json"
+	"time"
+)
+
+const (
+	UserAssociation         = "Users"
+	UserAuthInfoAssociation = "AuthInfos"
+	GroupAssociation        = "Groups"
 )
 
 // User 用户结构
@@ -11,6 +18,10 @@ type User struct {
 	Password string `json:"-" gorm:"size:256"`
 	Email    string `json:"email" gorm:"size:256"`
 	Avatar   string `json:"avatar" gorm:"size:256"`
+
+	AuthInfos []AuthInfo `json:"authInfos" gorm:"foreignKey:UserId;references:ID"`
+	Groups    []Group    `json:"groups" gorm:"many2many:user_groups;"`
+	Roles     []Role     `json:"roles" gorm:"many2many:user_roles;"`
 
 	BaseModel
 }
@@ -37,8 +48,22 @@ func (u *User) UnmarshalBinary(data []byte) error {
 	return json.Unmarshal(data, u)
 }
 
-// Users 变量是用户切片类型
-type Users []User
+type AuthInfo struct {
+	ID           uint      `json:"id" gorm:"autoIncrement;primaryKey"`
+	UserId       uint      `json:"userId" gorm:"size:256"`
+	Url          string    `json:"url" gorm:"size:256"`
+	AuthType     string    `json:"authType" gorm:"size:256"`
+	AuthId       string    `json:"authId" gorm:"size:256"`
+	AccessToken  string    `json:"-" gorm:"size:256"`
+	RefreshToken string    `json:"-" gorm:"size:256"`
+	Expiry       time.Time `json:"-"`
+
+	BaseModel
+}
+
+func (*AuthInfo) TableName() string {
+	return "auth_infos"
+}
 
 // CreatedUser 结构模型用于绑定前端传入的参数
 type CreatedUser struct {
@@ -83,3 +108,6 @@ type AuthUser struct {
 	AuthType  string `json:"authType"`
 	AuthCode  string `json:"authCode"`
 }
+
+// Users 变量是用户切片类型
+type Users []User

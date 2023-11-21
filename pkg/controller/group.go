@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:29:14
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-15 16:55:28
+ * @LastEditTime: 2023-11-21 14:07:24
  * @FilePath: \chitchat4.0\pkg\controller\group.go
  * @Description:
  *
@@ -139,6 +139,69 @@ func (g *GroupController) Update(c *gin.Context) {
 	common.ResponseSuccess(c, group)
 }
 
+// @Summary Delete group | 删除group
+// @Description Delete group | 删除指定的group
+// @Produce json
+// @Tags group
+// @Security JWT
+// @Param id path int true "group id"
+// @Success 200 {object} common.Response
+// @Router /api/v1/groups/{id} [delete]
+func (g *GroupController) Delete(c *gin.Context) {
+	user := common.GetUser(c)
+	if user == nil {
+		common.ResponseFailed(c, http.StatusBadRequest, fmt.Errorf("Delete group:failed to get user"))
+		return
+	}
+
+	if err := g.groupService.Delete(c.Param("id")); err != nil {
+		common.ResponseFailed(c, http.StatusInternalServerError, err)
+		return
+	}
+	common.ResponseSuccess(c, nil)
+}
+
+// @Summary Get users | 获取user集合
+// @Description Get users | 根据 group 获取user集合
+// @Produce json
+// @Tags group
+// @Security JWT
+// @Param id path int true "group id"
+// @Success 200 {object} common.Response
+// @Router /api/v1/groups/{id}/users [get]
+func (g *GroupController) GetUsers(c *gin.Context) {
+	users, err := g.groupService.GetUsers(c.Param("id"))
+	if err != nil {
+		common.ResponseFailed(c, http.StatusInternalServerError, err)
+		return
+	}
+	common.ResponseSuccess(c, users)
+}
+
+// @Summary Group Add user | 添加user
+// @Description Add user to group | 把user添加到group中
+// @Produce json
+// @Tags group
+// @Security JWT
+// @Param id path int true "group id"
+// @Param user body model.User true "user info"
+// @Success 200 {object} common.Response
+// @Router /api/v1/groups/{id}/users [post]
+func (g *GroupController) AddUser(c *gin.Context) {
+	user := new(model.User)
+
+	if err := c.BindJSON(user); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := g.groupService.AddUser(user, c.Param("id")); err != nil {
+		common.ResponseFailed(c, http.StatusInternalServerError, err)
+		return
+	}
+	common.ResponseSuccess(c, nil)
+}
+
 /**
  * @description: RegisterRoute() 注册路由
  * @param {*gin.HandlerFunc} api
@@ -149,6 +212,9 @@ func (g *GroupController) RegisterRoute(api *gin.RouterGroup) {
 	api.POST("/groups", g.Create)
 	api.GET("/groups/:id", g.Get)
 	api.PUT("/groups/:id", g.Update)
+	api.DELETE("/groups/:id", g.Delete)
+	api.GET("/groups/:id/users", g.GetUsers)
+	api.POST("/groups/:id/users", g.AddUser)
 }
 
 /**

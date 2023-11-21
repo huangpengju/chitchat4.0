@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-06 15:20:06
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-15 16:49:59
+ * @LastEditTime: 2023-11-21 13:54:17
  * @FilePath: \chitchat4.0\pkg\repository\group.go
  * @Description: group 分组仓库，实现接口
  *
@@ -59,7 +59,7 @@ func (g *groupRepository) Create(user *model.User, group *model.Group) (*model.G
  * @return {*}
  */
 func (g *groupRepository) RoleBinding(role *model.Role, group *model.Group) error {
-	return g.db.Model(&group).Association("Roles").Append(role)
+	return g.db.Model(group).Association("Roles").Append(role)
 }
 
 /**
@@ -96,6 +96,20 @@ func (g *groupRepository) List() ([]model.Group, error) {
 }
 
 func (g *groupRepository) Update(group *model.Group) (*model.Group, error) {
-	err := g.db.Model(&group).Select(groupUpdateFields).Updates(group).Error
+	err := g.db.Model(group).Select(groupUpdateFields).Updates(group).Error
 	return group, err
+}
+
+func (g *groupRepository) Delete(id uint) error {
+	return g.db.Delete(&model.Group{}, id).Error
+}
+
+func (g *groupRepository) GetUsers(group *model.Group) (model.Users, error) {
+	users := make(model.Users, 0)
+	err := g.db.Model(group).Association(model.UserAssociation).Find(&users)
+	return users, err
+}
+
+func (g *groupRepository) AddUser(user *model.User, group *model.Group) error {
+	return g.db.Model(group).Association(model.UserAssociation).Append(user)
 }
