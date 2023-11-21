@@ -342,14 +342,14 @@
                         "JWT": []
                     }
                 ],
-                "description": "Get users | 根据 group 获取user集合",
+                "description": "Get users to group| 根据 group 获取user集合",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "group"
                 ],
-                "summary": "Get users | 获取user集合",
+                "summary": "Group Get users | 获取user集合",
                 "parameters": [
                     {
                         "type": "integer",
@@ -427,23 +427,14 @@
                     {
                         "type": "integer",
                         "description": "group id",
-                        "name": "id",
+                        "name": "gid",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "user info",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.User"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "user 的 name",
-                        "name": "name",
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "uid",
                         "in": "query",
                         "required": true
                     }

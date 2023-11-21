@@ -164,13 +164,20 @@ func (g *groupService) AddUser(user *model.User, id string) error {
 	return g.groupRepository.AddUser(user, &model.Group{ID: uint(gid)})
 }
 
-func (g *groupService) DelUser(user *model.User, id string) error {
-	if user.Name == "" {
-		return fmt.Errorf("%v", "Group DelUser:invaild user info")
-	}
-	gid, err := strconv.Atoi(id)
+func (g *groupService) DelUser(uid, gid string) error {
+	user := new(model.User)
+	userID, err := strconv.Atoi(uid)
 	if err != nil {
 		return err
 	}
-	return g.groupRepository.DelUser(user, &model.Group{ID: uint(gid)})
+
+	user.ID = uint(userID)
+	if user.ID == 0 {
+		return fmt.Errorf("%v", "Group DelUser:invaild user info")
+	}
+	groupID, err := strconv.Atoi(gid)
+	if err != nil {
+		return err
+	}
+	return g.groupRepository.DelUser(user, &model.Group{ID: uint(groupID)})
 }

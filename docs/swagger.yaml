@@ -414,20 +414,14 @@ paths:
       parameters:
       - description: group id
         in: path
-        name: id
+        name: gid
         required: true
         type: integer
-      - description: user info
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/model.User'
-      - description: user 的 name
+      - description: user id
         in: query
-        name: name
+        name: uid
         required: true
-        type: string
+        type: integer
       produces:
       - application/json
       responses:
@@ -441,7 +435,7 @@ paths:
       tags:
       - group
     get:
-      description: Get users | 根据 group 获取user集合
+      description: Get users to group| 根据 group 获取user集合
       parameters:
       - description: group id
         in: path
@@ -457,7 +451,7 @@ paths:
             $ref: '#/definitions/common.Response'
       security:
       - JWT: []
-      summary: Get users | 获取user集合
+      summary: Group Get users | 获取user集合
       tags:
       - group
     post:

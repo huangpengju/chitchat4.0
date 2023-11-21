@@ -13,7 +13,6 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"chitchat4.0/pkg/common"
 	"chitchat4.0/pkg/model"
@@ -162,8 +161,8 @@ func (g *GroupController) Delete(c *gin.Context) {
 	common.ResponseSuccess(c, nil)
 }
 
-// @Summary Get users | 获取user集合
-// @Description Get users | 根据 group 获取user集合
+// @Summary Group Get users | 获取user集合
+// @Description Get users to group| 根据 group 获取user集合
 // @Produce json
 // @Tags group
 // @Security JWT
@@ -208,17 +207,12 @@ func (g *GroupController) AddUser(c *gin.Context) {
 // @Produce json
 // @Tags group
 // @Security JWT
-// @Param id path int true "group id"
+// @Param gid path int true "group id"
 // @Param uid query int true "user id"
 // @Success 200 {object} common.Response
 // @Router /api/v1/groups/{id}/users [delete]
 func (g *GroupController) DelUser(c *gin.Context) {
-	user := new(model.User)
-	uid, _ := strconv.Atoi(c.Query("uid"))
-
-	user.ID = uint(uid)
-
-	if err := g.groupService.DelUser(user, c.Param("id")); err != nil {
+	if err := g.groupService.DelUser(c.Query("uid"), c.Param("id")); err != nil {
 		common.ResponseFailed(c, http.StatusBadRequest, err)
 		return
 	}
