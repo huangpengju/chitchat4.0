@@ -411,6 +411,54 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Delete user from group | 删除group中的user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "group"
+                ],
+                "summary": "Delete user | 删除user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "group id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "user info",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "user 的 name",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
             }
         },
         "/api/v1/operations": {
@@ -919,6 +967,32 @@ const docTemplate = `{
                 }
             }
         },
+        "model.AuthInfo": {
+            "type": "object",
+            "properties": {
+                "authId": {
+                    "type": "string"
+                },
+                "authType": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.AuthUser": {
             "type": "object",
             "properties": {
@@ -1158,6 +1232,12 @@ const docTemplate = `{
         "model.User": {
             "type": "object",
             "properties": {
+                "authInfos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.AuthInfo"
+                    }
+                },
                 "avatar": {
                     "type": "string"
                 },
@@ -1167,11 +1247,23 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Group"
+                    }
+                },
                 "id": {
                     "type": "integer"
                 },
                 "name": {
                     "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Role"
+                    }
                 },
                 "updatedAt": {
                     "type": "string"

@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:30:32
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-21 14:01:34
+ * @LastEditTime: 2023-11-21 16:55:36
  * @FilePath: \chitchat4.0\pkg\service\group.go
  * @Description:
  *
@@ -162,4 +162,15 @@ func (g *groupService) AddUser(user *model.User, id string) error {
 		return err
 	}
 	return g.groupRepository.AddUser(user, &model.Group{ID: uint(gid)})
+}
+
+func (g *groupService) DelUser(user *model.User, id string) error {
+	if user.Name == "" {
+		return fmt.Errorf("%v", "Group DelUser:invaild user info")
+	}
+	gid, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+	return g.groupRepository.DelUser(user, &model.Group{ID: uint(gid)})
 }

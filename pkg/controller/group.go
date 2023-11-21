@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:29:14
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-21 14:07:24
+ * @LastEditTime: 2023-11-21 17:12:18
  * @FilePath: \chitchat4.0\pkg\controller\group.go
  * @Description:
  *
@@ -13,6 +13,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"chitchat4.0/pkg/common"
 	"chitchat4.0/pkg/model"
@@ -202,6 +203,28 @@ func (g *GroupController) AddUser(c *gin.Context) {
 	common.ResponseSuccess(c, nil)
 }
 
+// @Summary Delete user | 删除user
+// @Description Delete user from group | 删除group中的user
+// @Produce json
+// @Tags group
+// @Security JWT
+// @Param id path int true "group id"
+// @Param uid query int true "user id"
+// @Success 200 {object} common.Response
+// @Router /api/v1/groups/{id}/users [delete]
+func (g *GroupController) DelUser(c *gin.Context) {
+	user := new(model.User)
+	uid, _ := strconv.Atoi(c.Query("uid"))
+
+	user.ID = uint(uid)
+
+	if err := g.groupService.DelUser(user, c.Param("id")); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	common.ResponseSuccess(c, nil)
+}
+
 /**
  * @description: RegisterRoute() 注册路由
  * @param {*gin.HandlerFunc} api
@@ -215,6 +238,7 @@ func (g *GroupController) RegisterRoute(api *gin.RouterGroup) {
 	api.DELETE("/groups/:id", g.Delete)
 	api.GET("/groups/:id/users", g.GetUsers)
 	api.POST("/groups/:id/users", g.AddUser)
+	api.DELETE("/groups/:id/users", g.DelUser)
 }
 
 /**

@@ -8,6 +8,23 @@ definitions:
       msg:
         type: string
     type: object
+  model.AuthInfo:
+    properties:
+      authId:
+        type: string
+      authType:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      updatedAt:
+        type: string
+      url:
+        type: string
+      userId:
+        type: integer
+    type: object
   model.AuthUser:
     properties:
       authCode:
@@ -168,16 +185,28 @@ definitions:
     type: object
   model.User:
     properties:
+      authInfos:
+        items:
+          $ref: '#/definitions/model.AuthInfo'
+        type: array
       avatar:
         type: string
       createdAt:
         type: string
       email:
         type: string
+      groups:
+        items:
+          $ref: '#/definitions/model.Group'
+        type: array
       id:
         type: integer
       name:
         type: string
+      roles:
+        items:
+          $ref: '#/definitions/model.Role'
+        type: array
       updatedAt:
         type: string
     type: object
@@ -380,6 +409,37 @@ paths:
       tags:
       - group
   /api/v1/groups/{id}/users:
+    delete:
+      description: Delete user from group | 删除group中的user
+      parameters:
+      - description: group id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: user info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      - description: user 的 name
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Delete user | 删除user
+      tags:
+      - group
     get:
       description: Get users | 根据 group 获取user集合
       parameters:

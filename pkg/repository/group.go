@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-06 15:20:06
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-21 13:54:17
+ * @LastEditTime: 2023-11-21 16:25:32
  * @FilePath: \chitchat4.0\pkg\repository\group.go
  * @Description: group 分组仓库，实现接口
  *
@@ -112,4 +112,8 @@ func (g *groupRepository) GetUsers(group *model.Group) (model.Users, error) {
 
 func (g *groupRepository) AddUser(user *model.User, group *model.Group) error {
 	return g.db.Model(group).Association(model.UserAssociation).Append(user)
+}
+
+func (g *groupRepository) DelUser(user *model.User, group *model.Group) error {
+	return g.db.Model(group).Association(model.UserAssociation).Delete(user)
 }

@@ -53,6 +53,7 @@ type GroupRepository interface {
 	Delete(uint) error
 	GetUsers(*model.Group) (model.Users, error)
 	AddUser(user *model.User, group *model.Group) error
+	DelUser(user *model.User, group *model.Group) error
 
 	RoleBinding(role *model.Role, group *model.Group) error
 	Migrate() error

@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-09-28 16:29:32
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-21 10:48:33
+ * @LastEditTime: 2023-11-21 16:18:49
  * @FilePath: \chitchat4.0\pkg\service\interface.go
  * @Description:
  *
@@ -31,6 +31,7 @@ type GroupService interface {
 	Delete(string) error
 	GetUsers(string) (model.Users, error)
 	AddUser(user *model.User, gid string) error
+	DelUser(user *model.User, gid string) error
 }
 
 type TagService interface {
