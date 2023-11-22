@@ -121,11 +121,26 @@ func (ac *AuthController) Login(c *gin.Context) {
 		Token:    token,
 		Describe: "set token in Authorization Header,[Authorization:Bearer {token}]",
 	})
+	// Authorization添加规范，如：Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImFkbWluIiwiaXNzIjoiaHBqLmlvIiwiZXhwIjoxNzAxMjU5NTIzLCJuYmYiOjE3MDA2NTM3MjMsImp0aSI6IjEifQ.XXlKUnJZn59RmuNaHDGb-UTxpCNJd_fq_0ol0WB0KIg
+	// Bearer 为前缀不能少
+}
+
+// @Summary Logout | 退出
+// @Description User logout | User退出
+// @Produce json
+// @Tags auth
+// @Success 200 {object} common.Response
+// @Router /api/v1/auth/token [delete]
+func (ac *AuthController) Logout(c *gin.Context) {
+	c.SetCookie(common.CookieTokenName, "", -1, "/", "", true, true)
+	c.SetCookie(common.CookieLoginUser, "", -1, "/", "", true, false)
+	common.ResponseSuccess(c, nil)
 }
 
 func (ac *AuthController) RegisterRoute(api *gin.RouterGroup) {
 	api.POST("/auth/user", ac.Register)
 	api.POST("/auth/token", ac.Login)
+	api.DELETE("/auth/token", ac.Logout)
 }
 
 func (ac *AuthController) Name() string {

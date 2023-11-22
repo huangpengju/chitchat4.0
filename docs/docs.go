@@ -67,6 +67,24 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "description": "User logout | User退出",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout | 退出",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
             }
         },
         "/api/v1/auth/user": {

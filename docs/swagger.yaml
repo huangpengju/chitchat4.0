@@ -226,6 +226,18 @@ info:
   version: "4.0"
 paths:
   /api/v1/auth/token:
+    delete:
+      description: User logout | User退出
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Logout | 退出
+      tags:
+      - auth
     post:
       consumes:
       - application/json
