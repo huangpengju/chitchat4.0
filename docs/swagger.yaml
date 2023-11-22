@@ -409,6 +409,31 @@ paths:
       tags:
       - group
   /api/v1/groups/{id}/roles/{rid}:
+    delete:
+      description: delete role from group | 删除group中的role
+      parameters:
+      - description: group id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: role id
+        in: path
+        name: rid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Delete role | 删除 role
+      tags:
+      - group
     post:
       description: Add role to group | 给 group 添加 role
       parameters:
@@ -431,7 +456,7 @@ paths:
             $ref: '#/definitions/common.Response'
       security:
       - JWT: []
-      summary: Add role | 添加角色
+      summary: Add role | 添加role
       tags:
       - group
   /api/v1/groups/{id}/users:

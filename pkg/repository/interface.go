@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-09-27 14:50:58
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-21 13:50:41
+ * @LastEditTime: 2023-11-22 13:55:41
  * @FilePath: \chitchat4.0\pkg\repository\interface.go
  * @Description: 接口
  *
@@ -56,6 +56,7 @@ type GroupRepository interface {
 	AddUser(user *model.User, group *model.Group) error
 	DelUser(user *model.User, group *model.Group) error
 	AddRole(role *model.Role, group *model.Group) error
+	DelRole(role *model.Role, group *model.Group) error
 
 	RoleBinding(role *model.Role, group *model.Group) error
 	Migrate() error

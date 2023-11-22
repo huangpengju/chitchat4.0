@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:29:14
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-22 12:17:26
+ * @LastEditTime: 2023-11-22 14:08:19
  * @FilePath: \chitchat4.0\pkg\controller\group.go
  * @Description:
  *
@@ -219,7 +219,7 @@ func (g *GroupController) DelUser(c *gin.Context) {
 	common.ResponseSuccess(c, nil)
 }
 
-// @Summary Add role | 添加角色
+// @Summary Add role | 添加role
 // @Description Add role to group | 给 group 添加 role
 // @Produce json
 // @Tags group
@@ -237,6 +237,23 @@ func (g *GroupController) AddRole(c *gin.Context) {
 
 }
 
+// @Summary Delete role | 删除 role
+// @Description delete role from group | 删除group中的role
+// @produce json
+// @Tags group
+// @Security JWT
+// @Param id path int true "group id"
+// @Param rid path int true "role id"
+// @Success 200 {object} common.Response
+// @Router /api/v1/groups/{id}/roles/{rid} [delete]
+func (g *GroupController) DelRole(c *gin.Context) {
+	if err := g.groupService.DelRole(c.Param("id"), c.Param("rid")); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	common.ResponseSuccess(c, nil)
+}
+
 /**
  * @description: RegisterRoute() 注册路由
  * @param {*gin.HandlerFunc} api
@@ -252,6 +269,7 @@ func (g *GroupController) RegisterRoute(api *gin.RouterGroup) {
 	api.POST("/groups/:id/users", g.AddUser)
 	api.DELETE("/groups/:id/users", g.DelUser)
 	api.POST("/groups/:id/roles/:rid", g.AddRole)
+	api.DELETE("/groups/:id/roles/:rid", g.DelRole)
 }
 
 /**

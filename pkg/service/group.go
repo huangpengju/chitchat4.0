@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:30:32
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-22 11:10:03
+ * @LastEditTime: 2023-11-22 14:03:15
  * @FilePath: \chitchat4.0\pkg\service\group.go
  * @Description:
  *
@@ -196,4 +196,17 @@ func (g *groupService) AddRole(id, rid string) error {
 	}
 
 	return g.groupRepository.AddRole(&model.Role{ID: uint(roleId)}, &model.Group{ID: uint(gid)})
+}
+
+func (g *groupService) DelRole(id, rid string) error {
+	gid, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+	roleId, err := strconv.Atoi(rid)
+	if err != nil {
+		return err
+	}
+
+	return g.groupRepository.DelRole(&model.Role{ID: uint(roleId)}, &model.Group{ID: uint(gid)})
 }

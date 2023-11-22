@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-06 15:20:06
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-21 16:25:32
+ * @LastEditTime: 2023-11-22 14:00:51
  * @FilePath: \chitchat4.0\pkg\repository\group.go
  * @Description: group 分组仓库，实现接口
  *
@@ -135,4 +135,15 @@ func (g *groupRepository) GetGroupByName(name string) (*model.Group, error) {
 		return nil, err
 	}
 	return group, nil
+}
+
+func (g *groupRepository) DelRole(role *model.Role, group *model.Group) error {
+	var err error
+	if group.ID == 0 {
+		group, err = g.GetGroupByName(group.Name)
+	}
+	if err != nil {
+		return err
+	}
+	return g.db.Model(group).Association("Roles").Delete(role)
 }
