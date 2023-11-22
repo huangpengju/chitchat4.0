@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"strconv"
 
 	"chitchat4.0/pkg/database"
@@ -96,7 +97,7 @@ func (u *userRepository) GetUserByName(name string) (*model.User, error) {
 // setCacheUser 缓存 user
 func (u *userRepository) setCacheUser(user *model.User) error {
 	if user == nil {
-		return nil
+		return fmt.Errorf("%v", "注册成功，设置缓存是user为nil")
 	}
 	// 参数1：表名:id
 	// 参数2：user的id
