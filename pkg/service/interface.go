@@ -31,7 +31,7 @@ type GroupService interface {
 	Delete(string) error
 	GetUsers(string) (model.Users, error)
 	AddUser(user *model.User, gid string) error
-	DelUser(uid, gid string) error
+	DelUser(gid, uid string) error
 	AddRole(id, rid string) error
 }
 

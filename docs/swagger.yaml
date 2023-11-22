@@ -408,13 +408,39 @@ paths:
       summary: Update group | 修改 group
       tags:
       - group
+  /api/v1/groups/{id}/roles/{rid}:
+    post:
+      description: Add role to group | 给 group 添加 role
+      parameters:
+      - description: group id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: role id
+        in: path
+        name: rid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Add role | 添加角色
+      tags:
+      - group
   /api/v1/groups/{id}/users:
     delete:
       description: Delete user from group | 删除group中的user
       parameters:
       - description: group id
         in: path
-        name: gid
+        name: id
         required: true
         type: integer
       - description: user id

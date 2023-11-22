@@ -338,6 +338,47 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/groups/{id}/roles/{rid}": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Add role to group | 给 group 添加 role",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "group"
+                ],
+                "summary": "Add role | 添加角色",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "group id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "role id",
+                        "name": "rid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/groups/{id}/users": {
             "get": {
                 "security": [
@@ -430,7 +471,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "group id",
-                        "name": "gid",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     },

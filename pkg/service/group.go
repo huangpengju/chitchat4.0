@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:30:32
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-21 16:55:36
+ * @LastEditTime: 2023-11-22 11:10:03
  * @FilePath: \chitchat4.0\pkg\service\group.go
  * @Description:
  *
@@ -164,22 +164,24 @@ func (g *groupService) AddUser(user *model.User, id string) error {
 	return g.groupRepository.AddUser(user, &model.Group{ID: uint(gid)})
 }
 
-func (g *groupService) DelUser(uid, gid string) error {
-	user := new(model.User)
-	userID, err := strconv.Atoi(uid)
+func (g *groupService) DelUser(gid, uid string) error {
+	groupId, err := strconv.Atoi(gid)
 	if err != nil {
 		return err
 	}
 
-	user.ID = uint(userID)
-	if user.ID == 0 {
-		return fmt.Errorf("%v", "Group DelUser:invaild user info")
-	}
-	groupID, err := strconv.Atoi(gid)
+	userId, err := strconv.Atoi(uid)
 	if err != nil {
 		return err
 	}
-	return g.groupRepository.DelUser(user, &model.Group{ID: uint(groupID)})
+
+	user := new(model.User)
+	user.ID = uint(userId)
+	if user.ID == 0 {
+		return fmt.Errorf("%v", "Group DelUser:invaild user info")
+	}
+
+	return g.groupRepository.DelUser(user, &model.Group{ID: uint(groupId)})
 }
 
 func (g *groupService) AddRole(id, rid string) error {

@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:29:14
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-21 17:12:18
+ * @LastEditTime: 2023-11-22 12:17:26
  * @FilePath: \chitchat4.0\pkg\controller\group.go
  * @Description:
  *
@@ -207,20 +207,34 @@ func (g *GroupController) AddUser(c *gin.Context) {
 // @Produce json
 // @Tags group
 // @Security JWT
-// @Param gid path int true "group id"
+// @Param id path int true "group id"
 // @Param uid query int true "user id"
 // @Success 200 {object} common.Response
 // @Router /api/v1/groups/{id}/users [delete]
 func (g *GroupController) DelUser(c *gin.Context) {
-	if err := g.groupService.DelUser(c.Query("uid"), c.Param("id")); err != nil {
+	if err := g.groupService.DelUser(c.Param("id"), c.Query("uid")); err != nil {
 		common.ResponseFailed(c, http.StatusBadRequest, err)
 		return
 	}
 	common.ResponseSuccess(c, nil)
 }
 
-func (g *GroupController)AddRole(c *gin.Context){
-	if err := g.groupService.AddRole(c.Param("id"),c.Param("rid"))
+// @Summary Add role | 添加角色
+// @Description Add role to group | 给 group 添加 role
+// @Produce json
+// @Tags group
+// @Security JWT
+// @Param id path int true "group id"
+// @param rid path int true "role id"
+// @Success 200 {object} common.Response
+// @Router /api/v1/groups/{id}/roles/{rid} [post]
+func (g *GroupController) AddRole(c *gin.Context) {
+	if err := g.groupService.AddRole(c.Param("id"), c.Param("rid")); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	common.ResponseSuccess(c, nil)
+
 }
 
 /**
