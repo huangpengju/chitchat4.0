@@ -117,5 +117,5 @@ func (u *userRepository) setCacheUser(user *model.User) error {
 }
 
 func (u *userRepository) Migrate() error {
-	return u.db.AutoMigrate(&model.User{})
+	return u.db.AutoMigrate(&model.User{}, &model.AuthInfo{})
 }

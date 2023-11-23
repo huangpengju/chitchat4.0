@@ -20,6 +20,7 @@ type Repository interface {
 	User() UserRepository   // 实现
 	Group() GroupRepository //
 	RBAC() RBACRepository
+
 	Tag() TagRepository
 	HotSearch() HotSearchRepository
 
@@ -40,6 +41,7 @@ type UserRepository interface {
 	Create(*model.User) (*model.User, error)
 	Update(*model.User) (*model.User, error)
 	Delete(*model.User) error
+
 	Migrate() error
 }
 

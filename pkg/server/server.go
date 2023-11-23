@@ -59,20 +59,20 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	userService := service.NewUserService(repository.User())
 	groupService := service.NewGroupService(repository.Group(), repository.User(), repository.RBAC())
 	jwtService := authentication.NewJWTService(conf.Server.JWTSecret)
-	tagService := service.NewTagService(repository.Tag())
-	hotSearchService := service.NewHotSearchService(repository.HotSearch())
+	// tagService := service.NewTagService(repository.Tag())
+	// hotSearchService := service.NewHotSearchService(repository.HotSearch())
 	rbacService := service.NewRBACService(repository.RBAC())
 
 	// 创建控制器
 	userController := controller.NewUserController(userService)
 	groupController := controller.NewGroupController(groupService)
 	authController := controller.NewAuthController(userService, jwtService)
-	tagController := controller.NewTagController(tagService)
-	hotSearchController := controller.NewHotSearchController(hotSearchService)
+	// tagController := controller.NewTagController(tagService)
+	// hotSearchController := controller.NewHotSearchController(hotSearchService)
 	rbacController := controller.NewRbacController(rbacService)
 
 	// 控制器汇总
-	controllers := []controller.Controller{userController, groupController, authController, tagController, hotSearchController, rbacController}
+	controllers := []controller.Controller{userController, groupController, authController, rbacController}
 
 	gin.SetMode(conf.Server.ENV) // 设置应用的模式(debug|release)
 
