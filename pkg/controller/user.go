@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"chitchat4.0/pkg/authorization"
 	"chitchat4.0/pkg/common"
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/service"
@@ -140,7 +141,26 @@ func (u *UserController) Update(c *gin.Context) {
 	common.ResponseSuccess(c, user)
 }
 
+// @Summary Delete user | 删除 user
+// @Description Delete user and stroage | 删除 user 和存储
+// @Produce json
+// @Tags user
+// @Security JWT
+// @Param id path int true "user id"
+// @Success 200 {object} common.Response
+// @Router /api/v1/users/{id} [delete]
 func (u *UserController) Delete(c *gin.Context) {
+	user := common.GetUser(c)
+	if user == nil || (strconv.Itoa(int(user.ID))) != c.Param("id") && !authorization.IsClusterAdmin(user) {
+		common.ResponseFailed(c, http.StatusBadRequest, nil)
+		return
+	}
+
+	if err := u.userService.Delete(c.Param("id")); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	common.ResponseSuccess(c, nil)
 
 }
 
@@ -149,7 +169,7 @@ func (u *UserController) RegisterRoute(api *gin.RouterGroup) {
 	api.POST("/users", u.Create)
 	api.GET("/users/:id", u.Get)
 	api.PUT("/users/:id", u.Update)
-	// api.DELETE("/users/:id", u.Delete)
+	api.DELETE("/users/:id", u.Delete)
 }
 
 /**

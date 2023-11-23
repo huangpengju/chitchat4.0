@@ -69,6 +69,14 @@ func (u *userService) Update(id string, new *model.User) (*model.User, error) {
 	return u.userRepository.Update(new)
 }
 
+func (u *userService) Delete(id string) error {
+	user, err := u.getUser(id)
+	if err != nil {
+		return err
+	}
+	return u.userRepository.Delete(user)
+}
+
 // Validate 验证用户数据
 func (u *userService) Validate(user *model.User) error {
 	if user == nil {
@@ -93,7 +101,7 @@ func (u *userService) Default(user *model.User) {
 	}
 }
 
-// Auth 通过接收到的参数实现登录验证的服务
+// Auth() 授权，通过接收到的参数实现登录验证的服务
 func (u *userService) Auth(auser *model.AuthUser) (*model.User, error) {
 	if auser == nil || auser.Name == "" || auser.Password == "" {
 		return nil, fmt.Errorf("name or password is empty")
@@ -119,4 +127,12 @@ func (u *userService) getUserByID(id string) (*model.User, error) {
 	}
 	// 在仓库中实现具体的用户查询操作
 	return u.userRepository.GetUserByID(uint(uid))
+}
+
+func (u *userService) getUser(id string) (*model.User, error) {
+	uid, err := strconv.Atoi(id)
+	if err != nil {
+		return nil, err
+	}
+	return &model.User{ID: uint(uid)}, nil
 }

@@ -760,6 +760,26 @@ paths:
       tags:
       - user
   /api/v1/users/{id}:
+    delete:
+      description: Delete user and stroage | 删除 user 和存储
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Delete user | 删除 user
+      tags:
+      - user
     get:
       description: 获取用户并保存
       parameters:

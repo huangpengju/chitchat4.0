@@ -39,6 +39,7 @@ type UserRepository interface {
 	List() (model.Users, error)
 	Create(*model.User) (*model.User, error)
 	Update(*model.User) (*model.User, error)
+	Delete(*model.User) error
 	Migrate() error
 }
 

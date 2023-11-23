@@ -70,6 +70,17 @@ func (u *userRepository) Update(user *model.User) (*model.User, error) {
 	return user, nil
 }
 
+func (u *userRepository) Delete(user *model.User) error {
+	// 删掉授权信息
+	err := u.db.Select(model.UserAuthInfoAssociation).Delete(user).Error
+	if err != nil {
+		return err
+	}
+	// 删掉Redis缓存
+	u.rdb.HDel(user.CacheKey(), strconv.Itoa(int(user.ID)))
+	return nil
+}
+
 // GetUserByID 通过ID获取用户，实现获取用户的服务
 func (u *userRepository) GetUserByID(id uint) (*model.User, error) {
 	// 创建一个空的user
