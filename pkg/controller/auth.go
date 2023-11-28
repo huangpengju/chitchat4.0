@@ -138,9 +138,9 @@ func (ac *AuthController) Logout(c *gin.Context) {
 }
 
 func (ac *AuthController) RegisterRoute(api *gin.RouterGroup) {
-	api.POST("/auth/user", ac.Register)
-	api.POST("/auth/token", ac.Login)
-	api.DELETE("/auth/token", ac.Logout)
+	api.POST("/auth/user", ac.Register)  // 注册用户
+	api.POST("/auth/token", ac.Login)    //  用户登录
+	api.DELETE("/auth/token", ac.Logout) // 退出
 }
 
 func (ac *AuthController) Name() string {

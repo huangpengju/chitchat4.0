@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"chitchat4.0/pkg/authorization"
@@ -115,14 +116,29 @@ func (u *UserController) List(c *gin.Context) {
 // @Success 200 {object} common.Response{data=model.User}
 // @Router /api/v1/users/{id} [put]
 func (u *UserController) Update(c *gin.Context) {
-	// GetUser
+	// GetUser 获取 Context(当前登录) 中的 user
 	user := common.GetUser(c)
-	fmt.Println("user（修改处）===", user)
+
+	// a || (b && c)
+	// 根据优先级相当于先算b && c ,然后和a相或；如果a是true，则返回a，不论是b或c，
+	// 如果a是false，则如果b是false，返回b，如果b是true，返回c。
+	//
+	// ①无 user 登录, a是true,不修改直接返回
+	// ②有 user 登录, 看是不是自己修改自己，
+	//  是自己修改自己，允许修改
+	//  不是自己修改自己，再看user是不是管理员，是，允许修改
+
+	//
 	// 判断用户是否存在，以及是不是有修改权限
-	if user == nil || (strconv.Itoa(int(user.ID)) != c.Param("id")) {
+	fmt.Println("user==", user)
+	fmt.Println("user.ID==", strconv.Itoa(int(user.ID)))
+	fmt.Println("c.Param==", c.Param("id"))
+
+	if user == nil || (strconv.Itoa(int(user.ID)) != c.Param("id") && !authorization.IsClusterAdmin(user)) {
 		common.ResponseFailed(c, http.StatusForbidden, nil)
 		return
 	}
+	os.Exit(0)
 	new := new(model.UpdatedUser)
 	if err := c.BindJSON(new); err != nil {
 		common.ResponseFailed(c, http.StatusBadRequest, err)
@@ -165,11 +181,11 @@ func (u *UserController) Delete(c *gin.Context) {
 }
 
 func (u *UserController) RegisterRoute(api *gin.RouterGroup) {
-	api.GET("/users", u.List)
-	api.POST("/users", u.Create)
-	api.GET("/users/:id", u.Get)
-	api.PUT("/users/:id", u.Update)
-	api.DELETE("/users/:id", u.Delete)
+	api.GET("/users", u.List)          // 用户列表
+	api.POST("/users", u.Create)       // 创建用户
+	api.GET("/users/:id", u.Get)       // 查询某个用户
+	api.PUT("/users/:id", u.Update)    // 修改用户信息
+	api.DELETE("/users/:id", u.Delete) // 删除 user
 }
 
 /**

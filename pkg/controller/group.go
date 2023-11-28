@@ -260,16 +260,16 @@ func (g *GroupController) DelRole(c *gin.Context) {
  * @return {*}
  */
 func (g *GroupController) RegisterRoute(api *gin.RouterGroup) {
-	api.GET("/groups", g.List)
-	api.POST("/groups", g.Create)
-	api.GET("/groups/:id", g.Get)
-	api.PUT("/groups/:id", g.Update)
-	api.DELETE("/groups/:id", g.Delete)
-	api.GET("/groups/:id/users", g.GetUsers)
-	api.POST("/groups/:id/users", g.AddUser)
-	api.DELETE("/groups/:id/users", g.DelUser)
-	api.POST("/groups/:id/roles/:rid", g.AddRole)
-	api.DELETE("/groups/:id/roles/:rid", g.DelRole)
+	api.GET("/groups", g.List)                      // group 列表
+	api.POST("/groups", g.Create)                   // 创建 group
+	api.GET("/groups/:id", g.Get)                   // 获取 group
+	api.PUT("/groups/:id", g.Update)                // 修改 group
+	api.DELETE("/groups/:id", g.Delete)             // 删除group
+	api.GET("/groups/:id/users", g.GetUsers)        // 获取 group 中的user集合
+	api.POST("/groups/:id/users", g.AddUser)        // 把user添加到group中
+	api.DELETE("/groups/:id/users", g.DelUser)      // 删除group中的user
+	api.POST("/groups/:id/roles/:rid", g.AddRole)   // 给 group 添加 role
+	api.DELETE("/groups/:id/roles/:rid", g.DelRole) // 删除group中的role
 }
 
 /**
