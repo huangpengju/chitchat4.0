@@ -33,7 +33,7 @@ type Migrant interface {
 	Migrate() error
 }
 
-// User 用户接口
+// User 用户接口13-8
 type UserRepository interface {
 	GetUserByID(uint) (*model.User, error)
 	GetUserByAuthID(authType, authID string) (*model.User, error)
@@ -46,7 +46,7 @@ type UserRepository interface {
 	Migrate() error
 }
 
-// 分组
+// 分组14-13
 type GroupRepository interface {
 	GetGroupByID(uint) (*model.Group, error)
 	GetGroupByName(string) (*model.Group, error)
@@ -80,6 +80,7 @@ type HotSearchRepository interface {
 	Migrate() error
 }
 
+// 12-7
 type RBACRepository interface {
 	List() ([]model.Role, error)
 	ListResources() ([]model.Resource, error)
