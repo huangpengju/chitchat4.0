@@ -45,10 +45,11 @@ type RedisConfig struct {
 	Password string `yaml:"password"`
 }
 
+// 授权配置
 type OAuthConfig struct {
-	AuthType     string `yaml:"authType"`
-	ClientId     string `yaml:"clientId"`
-	ClientSecret string `yaml:"clientSecret"`
+	AuthType     string `yaml:"authType"`     // 授权类型
+	ClientId     string `yaml:"clientId"`     // 客户Id
+	ClientSecret string `yaml:"clientSecret"` // 客户秘密
 }
 
 type DockerConfig struct {

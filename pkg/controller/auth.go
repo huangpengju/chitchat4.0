@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"chitchat4.0/pkg/authentication"
+	"chitchat4.0/pkg/authentication/oauth"
 	"chitchat4.0/pkg/common"
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/service"
@@ -72,21 +73,29 @@ func (ac *AuthController) Login(c *gin.Context) {
 	}
 	var user *model.User
 	var err error
-	// 判断授权类型是不是为空
-	// if !oauth.IsEmptyAuthType(auser.AuthType) && auser.Name == "" {
-	// 空
-	// provider, err := ac.oauthManger.GetAuthProvider(auser.AuthType)
-	// if err != nil{
-	// 	common.ResponseFailed(c,http.StatusBadRequest,err)
-	// 	return
-	// }
 
-	// 第三方登录
-	// authToken, err := provider.GetToken(auser.AuthCode)
-	// } else {
-	// 使用登录用户的name查询用户是否存在，然后对比登录用户密码和数据库用户密码
-	user, err = ac.userService.Auth(auser)
-	// }
+	// 通过授权类型，判断是第三方登录，还是user登录
+	if !oauth.IsEmptyAuthType(auser.AuthType) && auser.Name == "" {
+		// 第三方登录
+		// AuthType 不为 "" 时 ，a 是 !false | Name 为 ""时，b 是 true
+
+		// GetAuthProvider() 返回 提供者 provider
+		provider, err := ac.oauthManger.GetAuthProvider(auser.AuthType)
+
+		// provider, err := ac.oauthManger.GetAuthProvider(auser.AuthType)
+		// if err != nil{
+		// 	common.ResponseFailed(c,http.StatusBadRequest,err)
+		// 	return
+	} else {
+		// AuthType 为 "" 时 ，a 是 !true | Name 为 ""时， b 是 true
+		// AuthType 为 "" 时 ，a 是 !true | Name 不为 ""时，b 是 false
+		//
+
+		// AuthType 不为 "" 时 ，a 是 !false | Name 不为 ""时，b 是 false
+
+		// 使用登录用户的name查询用户是否存在，然后对比登录用户密码和数据库用户密码
+		user, err = ac.userService.Auth(auser)
+	}
 	if err != nil {
 		common.ResponseFailed(c, http.StatusUnauthorized, err)
 		return

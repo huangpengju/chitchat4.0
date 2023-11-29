@@ -1,9 +1,7 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 
 	"chitchat4.0/pkg/authorization"
@@ -119,32 +117,21 @@ func (u *UserController) Update(c *gin.Context) {
 	// GetUser 获取 Context(当前登录) 中的 user
 	user := common.GetUser(c)
 
-	// a || (b && c)
-	// 根据优先级相当于先算b && c ,然后和a相或；如果a是true，则返回a，不论是b或c，
-	// 如果a是false，则如果b是false，返回b，如果b是true，返回c。
-	//
-	// ①无 user 登录, a是true,不修改直接返回
+	// ①无 user 登录, a是true,最终不修改 直接返回
 	// ②有 user 登录, 看是不是自己修改自己，
-	//  是自己修改自己，允许修改
-	//  不是自己修改自己，再看user是不是管理员，是，允许修改
-
-	//
-	// 判断用户是否存在，以及是不是有修改权限
-	fmt.Println("user==", user)
-	fmt.Println("user.ID==", strconv.Itoa(int(user.ID)))
-	fmt.Println("c.Param==", c.Param("id"))
-
+	//  是自己修改自己，最终允许修改
+	//  不是自己修改自己，如果user是管理员，最终允许修改，如果user不是管理员，不允许修改，返回
 	if user == nil || (strconv.Itoa(int(user.ID)) != c.Param("id") && !authorization.IsClusterAdmin(user)) {
 		common.ResponseFailed(c, http.StatusForbidden, nil)
 		return
 	}
-	os.Exit(0)
+
 	new := new(model.UpdatedUser)
 	if err := c.BindJSON(new); err != nil {
 		common.ResponseFailed(c, http.StatusBadRequest, err)
 		return
 	}
-	logrus.Infof("get update user: %#v", new.Name)
+	logrus.Infof("已获取修改的 user: %#v", new.Name)
 
 	common.TraceStep(c, "start update user", trace.Field{Key: "user", Value: new.Name})
 	defer common.TraceStep(c, "update user done", trace.Field{Key: "user", Value: new.Name})

@@ -2,7 +2,7 @@
  * @Author: huangpengju 15713716933@163.com
  * @Date: 2023-11-14 15:30:32
  * @LastEditors: huangpengju 15713716933@163.com
- * @LastEditTime: 2023-11-22 14:03:15
+ * @LastEditTime: 2023-11-29 15:43:49
  * @FilePath: \chitchat4.0\pkg\service\group.go
  * @Description:
  *
@@ -50,6 +50,7 @@ func (g *groupService) Create(user *model.User, group *model.Group) (*model.Grou
 		return nil, err
 	}
 
+	// 给分组创建默认的角色
 	if err := g.createDefaultRoles(group); err != nil {
 		return nil, err
 	}
