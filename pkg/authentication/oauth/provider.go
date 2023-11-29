@@ -12,6 +12,9 @@ package oauth
 
 import (
 	"fmt"
+	"net"
+	"net/http"
+	"time"
 
 	"chitchat4.0/pkg/config"
 	"chitchat4.0/pkg/model"
@@ -22,6 +25,18 @@ const (
 	GithubAuthType = "github" // github授权类型
 	WeChatAuthType = "wechat" // 微信授权类型
 	EmptyAuthType  = "nil"    // 空的授权类型
+)
+
+var (
+	defaultHttpClient = &http.Client{
+		Transport: &http.Transport{
+			Dial: (&net.Dialer{
+				Timeout: 5 * time.Second,
+			}).Dial,
+			TLSHandshakeTimeout: 5 * time.Second,
+		},
+		Timeout: 10 * time.Second,
+	}
 )
 
 /**

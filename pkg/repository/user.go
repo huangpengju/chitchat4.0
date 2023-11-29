@@ -96,6 +96,16 @@ func (u *userRepository) GetUserByID(id uint) (*model.User, error) {
 	return user, nil
 }
 
+// 第三方登录查询user
+func (u *userRepository) GetUserByAuthID(authType, authID string) (*model.User, error) {
+	authInfo := new(model.AuthInfo)
+	if err := u.db.Where("auth_type = ? and auth_id = ?", authType, authID).First(authInfo).Error; err != nil {
+		return nil, err
+	}
+
+	return u.GetUserByID(authInfo.UserId)
+}
+
 // GetUserByName 通过name获取用户，实现获取用户的服务
 func (u *userRepository) GetUserByName(name string) (*model.User, error) {
 	user := new(model.User)

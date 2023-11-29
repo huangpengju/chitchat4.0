@@ -7,6 +7,7 @@ import (
 
 	"chitchat4.0/pkg/model"
 	"chitchat4.0/pkg/repository"
+	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -117,6 +118,24 @@ func (u *userService) Auth(auser *model.AuthUser) (*model.User, error) {
 	}
 	user.Password = ""
 	return user, nil
+}
+
+// 第三方登录
+func (u *userService) CreateOAuthUser(user *model.User) (*model.User, error) {
+	if (len(user.AuthInfos)) == 0 {
+		return nil, fmt.Errorf("empty auth info")
+	}
+
+	authInfo := user.AuthInfos[0]
+	// GetUserByAuthID 先查询 authInfo 再查询 user
+	old, err := u.userRepository.GetUserByAuthID(authInfo.AuthType, authInfo.AuthId)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound { // ErrRecordNotFound返回“记录未找到错误”。
+			return u.userRepository.Create(user) //未找到user,则使用 第三方信息注册
+		}
+		return nil, err
+	}
+	return old, nil
 }
 
 // getUserByID 通过ID获取用户的服务，接收用户id后调用user仓库

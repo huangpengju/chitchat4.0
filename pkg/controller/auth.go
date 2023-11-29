@@ -13,9 +13,9 @@ import (
 )
 
 type AuthController struct {
-	userService service.UserService
-	jwtService  *authentication.JWTService
-	// oauthManger *oauth.OAuthManger
+	userService  service.UserService        // user 服务
+	jwtService   *authentication.JWTService // jwt服务
+	oauthManager *oauth.OAuthManager        // 授权管理
 }
 
 func NewAuthController(userService service.UserService, jwtService *authentication.JWTService) Controller {
@@ -66,26 +66,42 @@ func (ac *AuthController) Register(c *gin.Context) {
 // @Success 200 {object} common.Response{data=model.JWTToken}
 // @Router /api/v1/auth/token [post]
 func (ac *AuthController) Login(c *gin.Context) {
+	// 准备把登录参数与结构体进行绑定
 	auser := new(model.AuthUser)
 	if err := c.BindJSON(auser); err != nil {
 		common.ResponseFailed(c, http.StatusBadRequest, err)
 		return
 	}
+
 	var user *model.User
 	var err error
 
-	// 通过授权类型，判断是第三方登录，还是user登录
+	// 根据授权类型，判断是第三方登录，还是user登录
 	if !oauth.IsEmptyAuthType(auser.AuthType) && auser.Name == "" {
 		// 第三方登录
 		// AuthType 不为 "" 时 ，a 是 !false | Name 为 ""时，b 是 true
 
-		// GetAuthProvider() 返回 提供者 provider
-		provider, err := ac.oauthManger.GetAuthProvider(auser.AuthType)
+		// GetAuthProvider() 根据授权类型，返回 提供者 provider
+		provider, err := ac.oauthManager.GetAuthProvider(auser.AuthType)
+		if err != nil {
+			common.ResponseFailed(c, http.StatusBadRequest, err)
+			return
+		}
+		authToken, err := provider.GetToken(auser.AuthCode)
+		if err != nil {
+			common.ResponseFailed(c, http.StatusBadRequest, err)
+			return
+		}
 
-		// provider, err := ac.oauthManger.GetAuthProvider(auser.AuthType)
-		// if err != nil{
-		// 	common.ResponseFailed(c,http.StatusBadRequest,err)
-		// 	return
+		userInfo, err := provider.GetUserInfo(authToken)
+		if err != nil {
+			common.ResponseFailed(c, http.StatusBadRequest, err)
+			return
+		}
+
+		// 第三方登录（不存在用户，则注册）
+		user, err = ac.userService.CreateOAuthUser(userInfo.User())
+
 	} else {
 		// AuthType 为 "" 时 ，a 是 !true | Name 为 ""时， b 是 true
 		// AuthType 为 "" 时 ，a 是 !true | Name 不为 ""时，b 是 false

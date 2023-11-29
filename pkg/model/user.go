@@ -17,7 +17,7 @@ type User struct {
 	Name     string `json:"name" gorm:"size:100;not null;unique"`
 	Password string `json:"-" gorm:"size:256"`
 	Email    string `json:"email" gorm:"size:256"`
-	Avatar   string `json:"avatar" gorm:"size:256"`
+	Avatar   string `json:"avatar" gorm:"size:256"` // 头像
 
 	AuthInfos []AuthInfo `json:"authInfos" gorm:"foreignKey:UserId;references:ID"`
 	Groups    []Group    `json:"groups" gorm:"many2many:user_groups;"`
