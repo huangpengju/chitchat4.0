@@ -155,3 +155,38 @@ func (u *userService) getUser(id string) (*model.User, error) {
 	}
 	return &model.User{ID: uint(uid)}, nil
 }
+
+func (u *userService) GetGroups(id string) ([]model.Group, error) {
+	user, err := u.getUserByID(id)
+	if err != nil {
+		return nil, err
+	}
+	return u.userRepository.GetGroups(user)
+}
+
+func (u *userService) AddRole(id, rid string) error {
+	uid, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+	roleId, err := strconv.Atoi(rid)
+	if err != nil {
+		return err
+	}
+
+	return u.userRepository.AddRole(&model.Role{ID: uint(roleId)}, &model.User{ID: uint(uid)})
+}
+
+func (u *userService) DelRole(id, rid string) error {
+	uid, err := strconv.Atoi(id)
+	if err != nil {
+		return nil
+	}
+	roleId, err := strconv.Atoi(rid)
+	if err != nil {
+		return nil
+	}
+
+	return u.userRepository.DelRole(&model.Role{ID: uint(roleId)}, &model.User{ID: uint(uid)})
+
+}

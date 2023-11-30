@@ -190,6 +190,7 @@ definitions:
           $ref: '#/definitions/model.AuthInfo'
         type: array
       avatar:
+        description: 头像
         type: string
       createdAt:
         type: string
@@ -836,6 +837,78 @@ paths:
       security:
       - JWT: []
       summary: Update user | 修改用户信息
+      tags:
+      - user
+  /api/v1/users/{id}/groups:
+    get:
+      description: Get groups | 获取 user 的全部group
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Get groups | 获取 user 的groups
+      tags:
+      - user
+  /api/v1/users/{id}/roles/{rid}:
+    delete:
+      description: delete role from user | 删除user的role
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: role id
+        in: path
+        name: rid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Delete role | 删除角色
+      tags:
+      - user
+    post:
+      description: Add role to user | 给user添加角色
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: role id
+        in: path
+        name: rid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - JWT: []
+      summary: Add role | 添加角色
       tags:
       - user
   /index:

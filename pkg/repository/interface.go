@@ -33,7 +33,7 @@ type Migrant interface {
 	Migrate() error
 }
 
-// User 用户接口13-8
+// User 用户接口13-11
 type UserRepository interface {
 	GetUserByID(uint) (*model.User, error)
 	GetUserByAuthID(authType, authID string) (*model.User, error)
@@ -43,6 +43,9 @@ type UserRepository interface {
 	Update(*model.User) (*model.User, error)
 	Delete(*model.User) error
 
+	GetGroups(*model.User) ([]model.Group, error)
+	AddRole(role *model.Role, user *model.User) error
+	DelRole(role *model.Role, user *model.User) error
 	Migrate() error
 }
 

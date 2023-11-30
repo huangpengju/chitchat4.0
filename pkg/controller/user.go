@@ -171,12 +171,68 @@ func (u *UserController) Delete(c *gin.Context) {
 
 }
 
+// @Summary Get groups | 获取 user 的groups
+// @Description Get groups | 获取 user 的全部group
+// @Produce json
+// @Tags user
+// @Security JWT
+// @Param id path int true "user id"
+// @Success 200 {object} common.Response
+// @Router /api/v1/users/{id}/groups [get]
+func (u *UserController) GetGroups(c *gin.Context) {
+	groups, err := u.userService.GetGroups(c.Param("id"))
+	if err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+
+	common.ResponseSuccess(c, groups)
+}
+
+// @Summary Add role | 添加角色
+// @Description Add role to user | 给user添加角色
+// @Produce json
+// @Tags user
+// @Security JWT
+// @Param id path int true "user id"
+// @Param rid path int true "role id"
+// @Success 200 {object} common.Response
+// @Router /api/v1/users/{id}/roles/{rid} [post]
+func (u *UserController) AddRole(c *gin.Context) {
+	if err := u.userService.AddRole(c.Param("id"), c.Param("rid")); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+	common.ResponseSuccess(c, nil)
+}
+
+// @Summary Delete role | 删除角色
+// @Description delete role from user | 删除user的role
+// @Produce json
+// @Tags user
+// @Security JWT
+// @Param id path int true "user id"
+// @Param rid path int true "role id"
+// @Success 200 {object} common.Response
+// @Router /api/v1/users/{id}/roles/{rid} [delete]
+func (u *UserController) DelRole(c *gin.Context) {
+	if err := u.userService.DelRole(c.Param("id"), c.Param("rid")); err != nil {
+		common.ResponseFailed(c, http.StatusBadRequest, err)
+		return
+	}
+
+	common.ResponseSuccess(c, nil)
+}
+
 func (u *UserController) RegisterRoute(api *gin.RouterGroup) {
-	api.GET("/users", u.List)          // 用户列表
-	api.POST("/users", u.Create)       // 创建用户
-	api.GET("/users/:id", u.Get)       // 查询某个用户
-	api.PUT("/users/:id", u.Update)    // 修改用户信息
-	api.DELETE("/users/:id", u.Delete) // 删除 user
+	api.GET("/users", u.List)                      // 用户列表
+	api.POST("/users", u.Create)                   // 创建用户
+	api.GET("/users/:id", u.Get)                   // 查询某个用户
+	api.PUT("/users/:id", u.Update)                // 修改用户信息
+	api.DELETE("/users/:id", u.Delete)             // 删除 user
+	api.GET("/users/:id/groups", u.GetGroups)      // user 的全部 group
+	api.POST("/users/:id/roles/:rid", u.AddRole)   // 给user添加role
+	api.DELETE("/users/:id/roles/:rid", u.DelRole) // 删除user的role
 }
 
 /**

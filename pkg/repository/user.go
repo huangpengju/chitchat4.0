@@ -130,3 +130,17 @@ func (u *userRepository) setCacheUser(user *model.User) error {
 func (u *userRepository) Migrate() error {
 	return u.db.AutoMigrate(&model.User{}, &model.AuthInfo{})
 }
+
+func (u *userRepository) GetGroups(user *model.User) ([]model.Group, error) {
+	groups := make([]model.Group, 0)
+	err := u.db.Model(user).Association(model.GroupAssociation).Find(&groups)
+	return groups, err
+}
+
+func (u *userRepository) AddRole(role *model.Role, user *model.User) error {
+	return u.db.Model(user).Association("Roles").Append(role)
+}
+
+func (u *userRepository) DelRole(role *model.Role, user *model.User) error {
+	return u.db.Model(user).Association("Roles").Delete(role)
+}

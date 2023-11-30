@@ -22,6 +22,9 @@ type UserService interface {
 	Validate(*model.User) error
 	Auth(*model.AuthUser) (*model.User, error)
 	Default(*model.User)
+	GetGroups(string) ([]model.Group, error)
+	AddRole(id, rid string) error
+	DelRole(id, rid string) error
 }
 
 type GroupService interface {
