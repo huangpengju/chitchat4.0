@@ -115,34 +115,19 @@ func (u *UserController) List(c *gin.Context) {
 // @Router /api/v1/users/{id} [put]
 func (u *UserController) Update(c *gin.Context) {
 	// GetUser 获取 Context(当前登录) 中的 user
-	loginUser := common.GetUser(c)
+	user := common.GetUser(c)
 
-	// ①无 user 登录, 不修改 直接返回
-	if loginUser == nil {
+	// ①无 user 登录, user == nil 是 true, 不修改，直接返回
+	//
+	// ②有 user 登录, 看是不是自己修改自己，
+	//
+	//  不是自己修改自己，需要验证，如果user是管理员，最终允许修改，如果user不是管理员，不允许修改，返回
+	if user == nil || (strconv.Itoa(int(user.ID)) != c.Param("id") && !authorization.IsClusterAdmin(user)) {
 		common.ResponseFailed(c, http.StatusForbidden, nil)
 		return
 	}
-
-	// ②有 user 登录
-	// 看是不是自己修改自己，
-
-	// 不是自己修改自己
-	if strconv.Itoa(int(loginUser.ID)) != c.Param("id") {
-		// 先去获取user的group等全部信息
-		loginUser, err := u.userService.Get(strconv.Itoa(int(loginUser.ID)))
-		if err != nil {
-			common.ResponseFailed(c, http.StatusBadRequest, err)
-			return
-		}
-		// 如果user是管理员，最终允许修改，如果user不是管理员，不允许修改，返回
-		if !authorization.IsClusterAdmin(loginUser) {
-			common.ResponseFailed(c, http.StatusForbidden, nil)
-			return
-		}
-	}
-
-	// 是自己修改自己，直接进行修改
-
+	//
+	// 是自己修改自己，直接允许去修改
 	// 要修改的 user 信息
 	new := new(model.UpdatedUser)
 	if err := c.BindJSON(new); err != nil {

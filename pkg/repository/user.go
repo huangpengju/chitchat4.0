@@ -86,7 +86,7 @@ func (u *userRepository) GetUserByID(id uint) (*model.User, error) {
 	// 创建一个空的user
 	user := new(model.User)
 	// Qmit 查询时省略password
-	if err := u.db.Omit("Password").First(user, id).Error; err != nil {
+	if err := u.db.Omit("Password").Preload(model.UserAuthInfoAssociation).Preload("Groups").Preload("Groups.Roles").Preload("Roles").First(user, id).Error; err != nil {
 		return nil, err
 	}
 	// 设置用户的redis缓存
