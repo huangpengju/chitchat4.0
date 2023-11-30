@@ -109,7 +109,8 @@ func (u *userRepository) GetUserByAuthID(authType, authID string) (*model.User, 
 // GetUserByName 通过name获取用户，实现获取用户的服务
 func (u *userRepository) GetUserByName(name string) (*model.User, error) {
 	user := new(model.User)
-	if err := u.db.Where("name=?", name).First(user).Error; err != nil {
+	// 关联 auth_infos | groups | group_roles | roles
+	if err := u.db.Preload(model.UserAuthInfoAssociation).Preload("Groups").Preload("Groups.Roles").Preload("Roles").Where("name=?", name).First(user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil

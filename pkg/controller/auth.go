@@ -82,20 +82,20 @@ func (ac *AuthController) Login(c *gin.Context) {
 		// AuthType 不为 "" 时 ，a 是 !false | Name 为 ""时，b 是 true
 
 		// GetAuthProvider() 根据授权类型，返回 提供者 provider
-		provider, err := ac.oauthManager.GetAuthProvider(auser.AuthType)
+		provider, err1 := ac.oauthManager.GetAuthProvider(auser.AuthType)
 		if err != nil {
-			common.ResponseFailed(c, http.StatusBadRequest, err)
+			common.ResponseFailed(c, http.StatusBadRequest, err1)
 			return
 		}
-		authToken, err := provider.GetToken(auser.AuthCode)
+		authToken, err2 := provider.GetToken(auser.AuthCode)
 		if err != nil {
-			common.ResponseFailed(c, http.StatusBadRequest, err)
+			common.ResponseFailed(c, http.StatusBadRequest, err2)
 			return
 		}
 
-		userInfo, err := provider.GetUserInfo(authToken)
+		userInfo, err3 := provider.GetUserInfo(authToken)
 		if err != nil {
-			common.ResponseFailed(c, http.StatusBadRequest, err)
+			common.ResponseFailed(c, http.StatusBadRequest, err3)
 			return
 		}
 
@@ -103,6 +103,7 @@ func (ac *AuthController) Login(c *gin.Context) {
 		user, err = ac.userService.CreateOAuthUser(userInfo.User())
 
 	} else {
+		// 注册账号登录
 		// AuthType 为 "" 时 ，a 是 !true | Name 为 ""时， b 是 true
 		// AuthType 为 "" 时 ，a 是 !true | Name 不为 ""时，b 是 false
 		//

@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	UserAssociation         = "Users"
-	UserAuthInfoAssociation = "AuthInfos"
-	GroupAssociation        = "Groups"
+	UserAssociation         = "Users"     // user 关联
+	UserAuthInfoAssociation = "AuthInfos" // user 授权信息关联
+	GroupAssociation        = "Groups"    // 组关联
 )
 
 // User 用户结构
