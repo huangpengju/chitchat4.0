@@ -57,7 +57,7 @@ type UserRepository interface {
 	Migrate() error // 自动迁移
 }
 
-// 分组14-13
+// 分组14-14
 type GroupRepository interface {
 	GetGroupByID(uint) (*model.Group, error)     // 实现通过id获取group
 	GetGroupByName(string) (*model.Group, error) // 实现通过name获取group

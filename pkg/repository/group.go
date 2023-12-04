@@ -149,6 +149,7 @@ func (g *groupRepository) DelRole(role *model.Role, group *model.Group) error {
 	return g.db.Model(group).Association("Roles").Delete(role)
 }
 
+// 在repository仓库Init时调用
 func (g *groupRepository) CreateGroups(groups []model.Group, conds ...clause.Expression) error {
 	return g.db.Clauses(conds...).Create(groups).Error
 }

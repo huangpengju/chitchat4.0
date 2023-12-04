@@ -12,6 +12,7 @@ import (
 	"chitchat4.0/pkg/database"
 	"chitchat4.0/pkg/model"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // rbac 数据库仓库
@@ -85,4 +86,34 @@ func (rbac *rbacRepository) Delete(id uint) error {
  */
 func (rbac *rbacRepository) Migrate() error {
 	return rbac.db.AutoMigrate(&model.Role{}, &model.Resource{})
+}
+
+func (rbac *rbacRepository) CreateResource(resource *model.Resource) (*model.Resource, error) {
+	err := rbac.db.Create(resource).Error
+	return resource, err
+}
+
+// 在repository仓库Init时调用
+func (rbac *rbacRepository) CreateResources(resources []model.Resource, conds ...clause.Expression) error {
+	err := rbac.db.Clauses(conds...).Create(resources).Error
+	return err
+}
+
+func (rbac *rbacRepository) GetResource(id int) (*model.Resource, error) {
+	res := &model.Resource{}
+	err := rbac.db.First(res, id).Error
+	return res, err
+}
+
+func (rbac *rbacRepository) GetRoleByName(name string) (*model.Role, error) {
+	role := new(model.Role)
+	if err := rbac.db.Preload(model.UserAssociation).Where("name = ?", name).First(role).Error; err != nil {
+		return nil, err
+	}
+
+	return role, nil
+}
+
+func (rbac *rbacRepository) DeleteResource(id uint) error {
+	return rbac.db.Delete(&model.Resource{}, id).Error
 }
