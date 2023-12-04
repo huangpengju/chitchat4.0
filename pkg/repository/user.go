@@ -144,3 +144,21 @@ func (u *userRepository) AddRole(role *model.Role, user *model.User) error {
 func (u *userRepository) DelRole(role *model.Role, user *model.User) error {
 	return u.db.Model(user).Association("Roles").Delete(role)
 }
+
+func (u *userRepository) AddAuthInfo(authInfo *model.AuthInfo) error {
+	if authInfo == nil {
+		return nil
+	}
+	if authInfo.UserId == 0 {
+		return fmt.Errorf("empty user id")
+	}
+	return u.db.Create(authInfo).Error
+}
+
+func (u *userRepository) DelAuthInfo(authInfo *model.AuthInfo) error {
+	if authInfo == nil {
+		return nil
+	}
+
+	return u.db.Delete(authInfo).Error
+}

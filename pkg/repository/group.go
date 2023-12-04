@@ -14,6 +14,7 @@ import (
 	"chitchat4.0/pkg/database"
 	"chitchat4.0/pkg/model"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var (
@@ -146,4 +147,8 @@ func (g *groupRepository) DelRole(role *model.Role, group *model.Group) error {
 		return err
 	}
 	return g.db.Model(group).Association("Roles").Delete(role)
+}
+
+func (g *groupRepository) CreateGroups(groups []model.Group, conds ...clause.Expression) error {
+	return g.db.Clauses(conds...).Create(groups).Error
 }

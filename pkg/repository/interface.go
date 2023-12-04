@@ -14,17 +14,21 @@ import (
 	"context"
 
 	"chitchat4.0/pkg/model"
+	"gorm.io/gorm/clause"
 )
 
 type Repository interface {
 	User() UserRepository   // 实现
 	Group() GroupRepository //
-	RBAC() RBACRepository
+	RBAC() RBACRepository   //
+	Close() error           // -
 
-	Tag() TagRepository
-	HotSearch() HotSearchRepository
+	// Tag() TagRepository
+	// HotSearch() HotSearchRepository
 
 	Ping(ctx context.Context) error
+
+	Init() error // -
 
 	Migrant
 }
@@ -33,40 +37,46 @@ type Migrant interface {
 	Migrate() error
 }
 
-// User 用户接口13-11
+// User 用户接口13
 type UserRepository interface {
-	GetUserByID(uint) (*model.User, error)
-	GetUserByAuthID(authType, authID string) (*model.User, error)
-	GetUserByName(string) (*model.User, error)
-	List() (model.Users, error)
-	Create(*model.User) (*model.User, error)
-	Update(*model.User) (*model.User, error)
-	Delete(*model.User) error
+	GetUserByID(uint) (*model.User, error)                        // 实现通过id获取user
+	GetUserByAuthID(authType, authID string) (*model.User, error) // 实现通过授权类型和授权ID获取userId，进一步通过userId获取user
+	GetUserByName(string) (*model.User, error)                    // 实现通过name获取user
+	List() (model.Users, error)                                   // 获取user列表
+	Create(*model.User) (*model.User, error)                      // 创建user
+	Update(*model.User) (*model.User, error)                      // 修改user
+	Delete(*model.User) error                                     // 删除user
 
-	GetGroups(*model.User) ([]model.Group, error)
-	AddRole(role *model.Role, user *model.User) error
-	DelRole(role *model.Role, user *model.User) error
-	Migrate() error
+	GetGroups(*model.User) ([]model.Group, error)     // 获取user的全部group
+	AddRole(role *model.Role, user *model.User) error // 给user添加role
+	DelRole(role *model.Role, user *model.User) error // 删除user的role
+
+	AddAuthInfo(authInfo *model.AuthInfo) error // 添加授权信息
+	DelAuthInfo(authInfo *model.AuthInfo) error // 删除授权信息
+
+	Migrate() error // 自动迁移
 }
 
 // 分组14-13
 type GroupRepository interface {
-	GetGroupByID(uint) (*model.Group, error)
-	GetGroupByName(string) (*model.Group, error)
+	GetGroupByID(uint) (*model.Group, error)     // 实现通过id获取group
+	GetGroupByName(string) (*model.Group, error) // 实现通过name获取group
 
-	List() ([]model.Group, error)
-	Create(*model.User, *model.Group) (*model.Group, error)
+	List() ([]model.Group, error)                           // 获取group列表
+	Create(*model.User, *model.Group) (*model.Group, error) // 创建group
 
-	Update(*model.Group) (*model.Group, error)
-	Delete(uint) error
-	GetUsers(*model.Group) (model.Users, error)
-	AddUser(user *model.User, group *model.Group) error
-	DelUser(user *model.User, group *model.Group) error
-	AddRole(role *model.Role, group *model.Group) error
-	DelRole(role *model.Role, group *model.Group) error
+	Update(*model.Group) (*model.Group, error)          // 修改group
+	Delete(uint) error                                  // 删除group
+	GetUsers(*model.Group) (model.Users, error)         // 获取group下的全部user
+	AddUser(user *model.User, group *model.Group) error // 给group添加user
+	DelUser(user *model.User, group *model.Group) error // 删除group下的user
+	AddRole(role *model.Role, group *model.Group) error // 给group添加role
+	DelRole(role *model.Role, group *model.Group) error // 删除group对应的role
 
-	RoleBinding(role *model.Role, group *model.Group) error
+	RoleBinding(role *model.Role, group *model.Group) error // 创建默认group时，绑定role
 	Migrate() error
+
+	CreateGroups(groups []model.Group, conds ...clause.Expression) error // -
 }
 
 // Tag 标签接口
@@ -85,11 +95,17 @@ type HotSearchRepository interface {
 
 // 12-7
 type RBACRepository interface {
-	List() ([]model.Role, error)
-	ListResources() ([]model.Resource, error)
-	Create(role *model.Role) (*model.Role, error)
-	GetRoleByID(id int) (*model.Role, error)
-	Update(role *model.Role) (*model.Role, error)
-	Delete(id uint) error
-	Migrate() error
+	List() ([]model.Role, error)                  // 获取role列表
+	ListResources() ([]model.Resource, error)     // resource 列表
+	Create(role *model.Role) (*model.Role, error) // 创建role
+	GetRoleByID(id int) (*model.Role, error)      // 通过id获取role
+	Update(role *model.Role) (*model.Role, error) // 修改role
+	Delete(id uint) error                         // 删除role
+	Migrate() error                               // 自动迁移
+
+	CreateResource(resource *model.Resource) (*model.Resource, error)
+	CreateResources(resource []model.Resource, conds ...clause.Expression) error
+	GetResource(id int) (*model.Resource, error)
+	GetRoleByName(name string) (*model.Role, error)
+	DeleteResource(id uint) error
 }

@@ -123,7 +123,7 @@ const (
 
 const (
 	ContainerResource = "containers" // 容器资源
-	PostResource      = "posts"      // post资源
+	// PostResource      = "posts"      // post资源
 	UserResource      = "users"      // user资源
 	GroupResource     = "groups"     // 组资源
 	RoleResource      = "roles"      // Role角色资源
